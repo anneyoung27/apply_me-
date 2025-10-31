@@ -1,15 +1,16 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QToolBar, QLineEdit, QComboBox, QListWidget,
-    QTableView, QGroupBox, QLabel, QTextEdit, QVBoxLayout, QHBoxLayout, QWidget, QPushButton
+    QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
+    QTableView, QListWidget, QListWidgetItem,
+    QToolBar, QLineEdit, QComboBox, QLabel,
+    QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox
 )
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem
+from PySide6.QtCore import Qt
 
-# Add form
+# App imports
 from app.add_dialog import ApplicationDialog
 from app.database import SessionLocal
 from app.models import Application
-from PySide6.QtWidgets import QMessageBox
-from PySide6.QtGui import QStandardItemModel, QStandardItem
 
 
 class MainWindow(QMainWindow):
@@ -17,29 +18,28 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Apply Me — Job Tracker")
         self.resize(1200, 700)
-        self.session = SessionLocal()  # buat koneksi database
+        self.session = SessionLocal()
+
         self.initUI()
         self.load_data()
 
-    # Add form
+    # === Add form ===
     def open_add_form(self):
         dialog = ApplicationDialog(self.session)
-        if dialog.exec_():  # jika ditekan Save
-            self.load_data()  # reload tabel
+        if dialog.exec_():
+            self.load_data()
             QMessageBox.information(self, "Success", "Application added successfully.")
 
-    # Edit form
+    # === Edit form ===
     def open_edit_form(self, selected_app):
-        session = SessionLocal()
-        dialog = ApplicationDialog(session, application=selected_app)
+        dialog = ApplicationDialog(self.session, application=selected_app)
         if dialog.exec_():
-            self.refresh_table()
+            self.load_data()
 
+    # === Load data to table ===
     def load_data(self):
-        # Ambil semua data lamaran
         apps = self.session.query(Application).order_by(Application.created_at.desc()).all()
 
-        # Buat model untuk QTableView
         model = QStandardItemModel()
         model.setHorizontalHeaderLabels([
             "Company", "Position", "Location", "Date Applied", "Status", "Source"
@@ -59,10 +59,18 @@ class MainWindow(QMainWindow):
             model.appendRow(row)
 
         self.table.setModel(model)
-        self.table.resizeColumnsToContents()
+        self.table.setColumnWidth(0, 100)  # Company
+        self.table.setColumnWidth(1, 100)  # Position
+        self.table.setColumnWidth(2, 120)  # Location
+        self.table.setColumnWidth(3, 80)  # Date Applied
+        self.table.setColumnWidth(4, 90)  # Status
         self.table.horizontalHeader().setStretchLastSection(True)
 
+    # === Switch Page ===
+    def switch_page(self, index):
+        self.pages.setCurrentIndex(index)
 
+    # === Init UI ===
     def initUI(self):
         # === Toolbar ===
         toolbar = QToolBar("Main Toolbar")
@@ -73,55 +81,82 @@ class MainWindow(QMainWindow):
         import_action = QAction("Import", self)
         export_action = QAction("Export", self)
         settings_action = QAction("Settings", self)
-
         toolbar.addActions([add_action, import_action, export_action, settings_action])
-
-        # Hubungkan tombol Add ke fungsi
         add_action.triggered.connect(self.open_add_form)
 
-        # === Search & Filter Bar ===
+        # === Side Menu ===
+        self.side_menu = QListWidget()
+        self.side_menu.setFixedWidth(180)
+        self.side_menu.addItem(QListWidgetItem("🏠 Dashboard"))
+        self.side_menu.addItem(QListWidgetItem("📊 Statistics"))
+        self.side_menu.currentRowChanged.connect(self.switch_page)
+
+        # === Pages Container ===
+        self.pages = QStackedWidget()
+
+        # =======================
+        # Page 1 — DASHBOARD
+        # =======================
+        self.dashboard_page = QWidget()
+        dashboard_layout = QHBoxLayout(self.dashboard_page)
+
+        # Center (Table + filter bar)
+        center_layout = QVBoxLayout()
         search_bar = QLineEdit()
         search_bar.setPlaceholderText("Search company or position...")
         filter_dropdown = QComboBox()
         filter_dropdown.addItems(["All", "Applied", "Interview", "Offer", "Rejected", "Withdrawn"])
 
-        toolbar.addWidget(search_bar)
-        toolbar.addWidget(filter_dropdown)
-
-        # === Layouts ===
-        left_pane = QListWidget()
-        left_pane.addItems(["All", "Applied", "Phone Screen", "Interview", "Offer", "Rejected", "Withdrawn"])
-        left_pane.setFixedWidth(150)
+        filter_layout = QHBoxLayout()
+        filter_layout.addWidget(search_bar)
+        filter_layout.addWidget(filter_dropdown)
 
         self.table = QTableView()
         self.table.setSortingEnabled(True)
 
-        # Right Panel — Detail Preview
+        center_layout.addLayout(filter_layout)
+        center_layout.addWidget(self.table)
+
+        # Right Pane (Details)
         right_box = QGroupBox("Application Details")
+        vbox = QVBoxLayout(right_box)
         self.detail_company = QLabel("Company: -")
         self.detail_position = QLabel("Position: -")
         self.detail_notes = QTextEdit()
         self.detail_notes.setReadOnly(True)
         self.open_resume_button = QPushButton("Open Resume")
         self.open_cover_button = QPushButton("Open Cover Letter")
-
-        vbox = QVBoxLayout()
         vbox.addWidget(self.detail_company)
         vbox.addWidget(self.detail_position)
         vbox.addWidget(QLabel("Notes:"))
         vbox.addWidget(self.detail_notes)
         vbox.addWidget(self.open_resume_button)
         vbox.addWidget(self.open_cover_button)
-        right_box.setLayout(vbox)
         right_box.setFixedWidth(300)
 
-        # === Central Layout ===
-        main_layout = QHBoxLayout()
-        main_layout.addWidget(left_pane)
-        main_layout.addWidget(self.table)
-        main_layout.addWidget(right_box)
+        # Combine Dashboard Layout
+        dashboard_layout.addLayout(center_layout)
+        dashboard_layout.addWidget(right_box)
+
+        # =======================
+        # Page 2 — STATISTICS
+        # =======================
+        self.stats_page = QWidget()
+        stats_layout = QVBoxLayout(self.stats_page)
+        stats_layout.addWidget(QLabel("📊 Statistics Page — Coming Soon..."))
+
+        # Add pages to stack
+        self.pages.addWidget(self.dashboard_page)
+        self.pages.addWidget(self.stats_page)
+
+        # === Root Layout ===
+        root_layout = QHBoxLayout()
+        root_layout.addWidget(self.side_menu)
+        root_layout.addWidget(self.pages)
 
         container = QWidget()
-        container.setLayout(main_layout)
+        container.setLayout(root_layout)
         self.setCentralWidget(container)
 
+        # Default ke Dashboard
+        self.side_menu.setCurrentRow(0)
