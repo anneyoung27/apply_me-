@@ -1,10 +1,12 @@
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget,
     QPushButton, QLabel, QTableWidget, QTableWidgetItem, QHeaderView,
-    QFrame
+    QMessageBox
 )
 from PySide6.QtCore import Qt
 from app.add_dialog import AddDialog
+from app.database import add_application, get_all_applications
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -12,8 +14,19 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("apply_me! – Job Application Tracker")
         self.resize(1000, 600)
         self._setup_ui()
+        self.load_data()  # langsung muat data saat start
+
+    def open_add_dialog(self):
+        """Buka form tambah data"""
+        dialog = AddDialog(self)
+        if dialog.exec():
+            data = dialog.get_data()
+            add_application(**data)
+            QMessageBox.information(self, "Success", "Application saved successfully!")
+            self.load_data()
 
     def _setup_ui(self):
+        """Bangun tampilan utama"""
         main_widget = QWidget()
         main_layout = QHBoxLayout(main_widget)
 
@@ -23,13 +36,15 @@ class MainWindow(QMainWindow):
         self.sidebar.setFixedWidth(200)
         self.sidebar.setStyleSheet("""
             QListWidget {
-                background-color: #2C3E50;
+                background-color: #1E1E1E;
                 color: white;
                 border: none;
-                font-size: 23px;
+                font-size: 13pt;
+                padding: 8px;
             }
             QListWidget::item:selected {
-                background-color: #3498DB;
+                background-color: #0078D7;
+                border-radius: 4px;
             }
         """)
 
@@ -38,53 +53,73 @@ class MainWindow(QMainWindow):
         dash_layout = QVBoxLayout(self.dashboard)
 
         title = QLabel("My Job Applications")
-        title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        title.setStyleSheet("font-size: 20px; font-weight: bold; margin-bottom: 8px;")
         dash_layout.addWidget(title)
 
-        # Table
-        self.table = QTableWidget(0, 4)
-        self.table.setHorizontalHeaderLabels(["Company", "Position", "Date Applied", "Status"])
+        # === Table ===
+        self.table = QTableWidget(0, 5)
+        self.table.setHorizontalHeaderLabels(["Company", "Position", "Date Applied", "Status", "Source"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         dash_layout.addWidget(self.table)
 
-        # Add Button
+        # === Add Button ===
         self.btn_add = QPushButton("＋ Add Application")
         self.btn_add.setFixedWidth(180)
         self.btn_add.clicked.connect(self.open_add_dialog)
         dash_layout.addWidget(self.btn_add, alignment=Qt.AlignRight)
 
-        # Styling
-        self.btn_add.setStyleSheet("""
-            QPushButton {
-                background-color: #27ae60;
+        # === Styling ===
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #121212;
                 color: white;
-                font-weight: bold;
+                font-family: 'Segoe UI';
+            }
+            QPushButton {
+                background-color: #0078D7;
+                color: white;
                 border-radius: 6px;
                 padding: 8px 14px;
+                font-weight: 500;
             }
             QPushButton:hover {
-                background-color: #2ecc71;
+                background-color: #0A84FF;
+            }
+            QHeaderView::section {
+                background-color: #0078D7;
+                color: white;
+                border: none;
+                padding: 6px;
+            }
+            QTableWidget {
+                background-color: #1E1E1E;
+                color: white;
+                border: none;
+                gridline-color: #333;
+                font-size: 10.5pt;
+            }
+            QTableWidget::item:selected {
+                background-color: #0A84FF;
             }
         """)
 
-        # Combine layouts
+        # === Gabungkan layout utama ===
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.dashboard)
         self.setCentralWidget(main_widget)
 
-        # Dummy data
-        self.add_table_row("Google", "Backend Engineer", "2025-10-29", "Applied")
+    def load_data(self):
+        """Muat data dari database (urut DESC — terbaru di atas)"""
+        rows = get_all_applications()  # ambil data dari DB
 
-    def add_table_row(self, company, position, date, status):
-        row = self.table.rowCount()
-        self.table.insertRow(row)
-        self.table.setItem(row, 0, QTableWidgetItem(company))
-        self.table.setItem(row, 1, QTableWidgetItem(position))
-        self.table.setItem(row, 2, QTableWidgetItem(date))
-        self.table.setItem(row, 3, QTableWidgetItem(status))
+        # urutkan dari ID terbesar ke terkecil (DESC)
+        rows.sort(key=lambda x: x[0], reverse=True)
 
-    def open_add_dialog(self):
-        dialog = AddDialog(self)
-        if dialog.exec():
-            data = dialog.get_data()
-            self.add_table_row(data["company"], data["position"], data["date"], data["status"])
+        self.table.setRowCount(len(rows))
+        for i, row in enumerate(rows):
+            # row: (id, company, position, location, date, source, status, ...)
+            self.table.setItem(i, 0, QTableWidgetItem(row[1]))  # Company
+            self.table.setItem(i, 1, QTableWidgetItem(row[2]))  # Position
+            self.table.setItem(i, 2, QTableWidgetItem(row[4]))  # Date Applied
+            self.table.setItem(i, 3, QTableWidgetItem(row[6]))  # Status
+            self.table.setItem(i, 4, QTableWidgetItem(row[5]))  # Source
