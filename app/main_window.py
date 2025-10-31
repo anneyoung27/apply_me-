@@ -1,125 +1,127 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget,
-    QPushButton, QLabel, QTableWidget, QTableWidgetItem, QHeaderView,
-    QMessageBox
+    QMainWindow, QToolBar, QLineEdit, QComboBox, QListWidget,
+    QTableView, QGroupBox, QLabel, QTextEdit, QVBoxLayout, QHBoxLayout, QWidget, QPushButton
 )
-from PySide6.QtCore import Qt
-from app.add_dialog import AddDialog
-from app.database import add_application, get_all_applications
+from PySide6.QtGui import QAction
+
+# Add form
+from app.add_dialog import ApplicationDialog
+from app.database import SessionLocal
+from app.models import Application
+from PySide6.QtWidgets import QMessageBox
+from PySide6.QtGui import QStandardItemModel, QStandardItem
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("apply_me! – Job Application Tracker")
-        self.resize(1000, 600)
-        self._setup_ui()
-        self.load_data()  # langsung muat data saat start
+        self.setWindowTitle("Apply Me — Job Tracker")
+        self.resize(1200, 700)
+        self.session = SessionLocal()  # buat koneksi database
+        self.initUI()
+        self.load_data()
 
-    def open_add_dialog(self):
-        """Buka form tambah data"""
-        dialog = AddDialog(self)
-        if dialog.exec():
-            data = dialog.get_data()
-            add_application(**data)
-            QMessageBox.information(self, "Success", "Application saved successfully!")
-            self.load_data()
+    # Add form
+    def open_add_form(self):
+        dialog = ApplicationDialog(self.session)
+        if dialog.exec_():  # jika ditekan Save
+            self.load_data()  # reload tabel
+            QMessageBox.information(self, "Success", "Application added successfully.")
 
-    def _setup_ui(self):
-        """Bangun tampilan utama"""
-        main_widget = QWidget()
-        main_layout = QHBoxLayout(main_widget)
-
-        # === Sidebar ===
-        self.sidebar = QListWidget()
-        self.sidebar.addItems(["🏠 Dashboard", "📂 Applications", "📊 Statistics", "⚙️ Settings"])
-        self.sidebar.setFixedWidth(200)
-        self.sidebar.setStyleSheet("""
-            QListWidget {
-                background-color: #1E1E1E;
-                color: white;
-                border: none;
-                font-size: 13pt;
-                padding: 8px;
-            }
-            QListWidget::item:selected {
-                background-color: #0078D7;
-                border-radius: 4px;
-            }
-        """)
-
-        # === Dashboard Area ===
-        self.dashboard = QWidget()
-        dash_layout = QVBoxLayout(self.dashboard)
-
-        title = QLabel("My Job Applications")
-        title.setStyleSheet("font-size: 20px; font-weight: bold; margin-bottom: 8px;")
-        dash_layout.addWidget(title)
-
-        # === Table ===
-        self.table = QTableWidget(0, 5)
-        self.table.setHorizontalHeaderLabels(["Company", "Position", "Date Applied", "Status", "Source"])
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        dash_layout.addWidget(self.table)
-
-        # === Add Button ===
-        self.btn_add = QPushButton("＋ Add Application")
-        self.btn_add.setFixedWidth(180)
-        self.btn_add.clicked.connect(self.open_add_dialog)
-        dash_layout.addWidget(self.btn_add, alignment=Qt.AlignRight)
-
-        # === Styling ===
-        self.setStyleSheet("""
-            QMainWindow {
-                background-color: #121212;
-                color: white;
-                font-family: 'Segoe UI';
-            }
-            QPushButton {
-                background-color: #0078D7;
-                color: white;
-                border-radius: 6px;
-                padding: 8px 14px;
-                font-weight: 500;
-            }
-            QPushButton:hover {
-                background-color: #0A84FF;
-            }
-            QHeaderView::section {
-                background-color: #0078D7;
-                color: white;
-                border: none;
-                padding: 6px;
-            }
-            QTableWidget {
-                background-color: #1E1E1E;
-                color: white;
-                border: none;
-                gridline-color: #333;
-                font-size: 10.5pt;
-            }
-            QTableWidget::item:selected {
-                background-color: #0A84FF;
-            }
-        """)
-
-        # === Gabungkan layout utama ===
-        main_layout.addWidget(self.sidebar)
-        main_layout.addWidget(self.dashboard)
-        self.setCentralWidget(main_widget)
+    # Edit form
+    def open_edit_form(self, selected_app):
+        session = SessionLocal()
+        dialog = ApplicationDialog(session, application=selected_app)
+        if dialog.exec_():
+            self.refresh_table()
 
     def load_data(self):
-        """Muat data dari database (urut DESC — terbaru di atas)"""
-        rows = get_all_applications()  # ambil data dari DB
+        # Ambil semua data lamaran
+        apps = self.session.query(Application).order_by(Application.created_at.desc()).all()
 
-        # urutkan dari ID terbesar ke terkecil (DESC)
-        rows.sort(key=lambda x: x[0], reverse=True)
+        # Buat model untuk QTableView
+        model = QStandardItemModel()
+        model.setHorizontalHeaderLabels([
+            "Company", "Position", "Location", "Date Applied", "Status", "Source"
+        ])
 
-        self.table.setRowCount(len(rows))
-        for i, row in enumerate(rows):
-            # row: (id, company, position, location, date, source, status, ...)
-            self.table.setItem(i, 0, QTableWidgetItem(row[1]))  # Company
-            self.table.setItem(i, 1, QTableWidgetItem(row[2]))  # Position
-            self.table.setItem(i, 2, QTableWidgetItem(row[4]))  # Date Applied
-            self.table.setItem(i, 3, QTableWidgetItem(row[6]))  # Status
-            self.table.setItem(i, 4, QTableWidgetItem(row[5]))  # Source
+        for app in apps:
+            row = [
+                QStandardItem(app.company_name or ""),
+                QStandardItem(app.position or ""),
+                QStandardItem(app.location or ""),
+                QStandardItem(str(app.date_applied) if app.date_applied else ""),
+                QStandardItem(app.status or ""),
+                QStandardItem(app.source or "")
+            ]
+            for item in row:
+                item.setEditable(False)
+            model.appendRow(row)
+
+        self.table.setModel(model)
+        self.table.resizeColumnsToContents()
+        self.table.horizontalHeader().setStretchLastSection(True)
+
+
+    def initUI(self):
+        # === Toolbar ===
+        toolbar = QToolBar("Main Toolbar")
+        self.addToolBar(toolbar)
+        toolbar.setMovable(False)
+
+        add_action = QAction("Add", self)
+        import_action = QAction("Import", self)
+        export_action = QAction("Export", self)
+        settings_action = QAction("Settings", self)
+
+        toolbar.addActions([add_action, import_action, export_action, settings_action])
+
+        # Hubungkan tombol Add ke fungsi
+        add_action.triggered.connect(self.open_add_form)
+
+        # === Search & Filter Bar ===
+        search_bar = QLineEdit()
+        search_bar.setPlaceholderText("Search company or position...")
+        filter_dropdown = QComboBox()
+        filter_dropdown.addItems(["All", "Applied", "Interview", "Offer", "Rejected", "Withdrawn"])
+
+        toolbar.addWidget(search_bar)
+        toolbar.addWidget(filter_dropdown)
+
+        # === Layouts ===
+        left_pane = QListWidget()
+        left_pane.addItems(["All", "Applied", "Phone Screen", "Interview", "Offer", "Rejected", "Withdrawn"])
+        left_pane.setFixedWidth(150)
+
+        self.table = QTableView()
+        self.table.setSortingEnabled(True)
+
+        # Right Panel — Detail Preview
+        right_box = QGroupBox("Application Details")
+        self.detail_company = QLabel("Company: -")
+        self.detail_position = QLabel("Position: -")
+        self.detail_notes = QTextEdit()
+        self.detail_notes.setReadOnly(True)
+        self.open_resume_button = QPushButton("Open Resume")
+        self.open_cover_button = QPushButton("Open Cover Letter")
+
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.detail_company)
+        vbox.addWidget(self.detail_position)
+        vbox.addWidget(QLabel("Notes:"))
+        vbox.addWidget(self.detail_notes)
+        vbox.addWidget(self.open_resume_button)
+        vbox.addWidget(self.open_cover_button)
+        right_box.setLayout(vbox)
+        right_box.setFixedWidth(300)
+
+        # === Central Layout ===
+        main_layout = QHBoxLayout()
+        main_layout.addWidget(left_pane)
+        main_layout.addWidget(self.table)
+        main_layout.addWidget(right_box)
+
+        container = QWidget()
+        container.setLayout(main_layout)
+        self.setCentralWidget(container)
+

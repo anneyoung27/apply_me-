@@ -14,7 +14,6 @@ Timeline / History — log kronologis perubahan status & interaksi.
 Attach files — simpan resume versi tertentu, cover letter, screenshot email.
 Search & Filter — cari berdasarkan perusahaan, posisi, status, tanggal.
 Export / Backup — ekspor CSV / export database untuk backup.
-Notifikasi / Reminder (opsional MVP: manual follow-up reminder).
 
 Fitur lanjutan (opsional)
 Sinkronisasi cloud (Google Drive / Dropbox) atau backup otomatis.
@@ -108,20 +107,6 @@ Rekomendasi teknis
     Style: QSS + QDarkStyle untuk tema modern; pertimbangkan library Fluent-style bila mau tampilan Windows 11.
     Backup: Sediakan export/import DB + CSV.
 
-Contoh skenario interaksi (micro-UX)
-    Setelah apply, aplikasi otomatis memberi saran follow-up 7 hari kemudian (reminder) — ini bisa simple: user set reminder manual atau default 7 hari.
-    Saat men-change status menjadi Interview, munculkan dialog kecil untuk isi tanggal interview + link kalender (opsional).
-    Saat attach file, tampilkan preview thumbnail (jika image) atau filename & size.
-
-Keamanan & privasi
-    Simpan data di lokal secara default; enkripsi DB jika ingin proteksi (opsional — mis. SQLCipher).
-    Jika tambahkan cloud sync, gunakan OAuth & enkripsi saat transit.
-
-Estimasi modul pengembangan (sprint ideas — untuk planning)
-    Sprint 1: Basic CRUD + SQLite + UI dasar (Main + Form).
-    Sprint 2: Attach files + status history + search & filter.
-    Sprint 3: Export CSV + basic stats dashboard.
-    Sprint 4: Reminders + packaging + settings + theming.
 
 Contoh snippet QSS untuk tombol modern
 QPushButton {
@@ -142,17 +127,46 @@ apply_me/
 │
 ├── app/
 │   ├── __init__.py
-│   ├── main_window.py            # Window utama + side menu (dashboard)
-│   ├── add_dialog.py             # Dialog untuk tambah lamaran
-│   ├── database.py               # Koneksi & setup SQLite
-│   └── models.py                 # Struktur tabel (pakai sqlite3 atau ORM)
-│
-├── ui/
-│   ├── main_window.ui            # (optional, dari Qt Designer)
-│   └── add_dialog.ui             # (optional)
+│   ├── main_window.py            # Window utama + dashboard logic
+│   ├── add_dialog.py             # Form Tambah/Edit Lamaran
+│   ├── database.py               # Setup SQLite + koneksi ORM
+│   ├── models.py                 # ORM models (SQLAlchemy / Peewee)
+│   ├── utils.py                  # Helper (export CSV, reminder utils)
+│   └── themes/                   # QSS dan tema tambahan
 │
 ├── assets/
-│   └── icons/                    # ikon-ikon aplikasi (add, edit, delete, dll)
+│   ├── icons/                    # Ikon aplikasi
+│   └── files/                    # Folder penyimpanan file user
 │
 └── data/
-    └── apply_me.db               # database SQLite
+    └── apply_me.db               # Database lokal
+
+
+7. Alur Pengguna (User Flow)
+Buka aplikasi → load database lokal otomatis.
+Klik “Add Application” → isi form → Save.
+Tabel utama menampilkan seluruh lamaran.
+Klik satu baris → panel kanan menampilkan detail cepat.
+Ganti status → otomatis tercatat di status_history.
+Attach file → file disalin ke assets/files/<app_id>/.
+Export CSV / Backup DB untuk laporan atau cadangan.
+
+8. Statistik / Analytics (Opsional)
+Gunakan QtCharts atau matplotlib untuk menampilkan:
+Jumlah lamaran per minggu/bulan
+Rasio interview vs offer
+Rata-rata waktu tanggapan
+Persentase status aktif
+
+
+Sprint 1	CRUD dasar + SQLite + UI Main & Form
+Sprint 2	Attach file + Status history + Search & Filter
+Sprint 3	Export CSV + Statistik dasar
+Sprint 4	Reminder + Settings + Theming + Packaging
+
+13. Ide Micro-UX (NEW UPDATE)!
+Saat status berubah → tampilkan mini-dialog konfirmasi / tambah komentar.
+Saat tambah lamaran → auto-reminder 7 hari setelah apply.
+Saat attach file → tampilkan thumbnail / nama file + ukuran.
+Tooltip ringan di tiap tombol toolbar.
+
