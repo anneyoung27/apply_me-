@@ -24,6 +24,10 @@ class Application(Base):
     contacts = relationship("Contact", back_populates="application", cascade="all, delete-orphan")
     reminders = relationship("Reminder", back_populates="application", cascade="all, delete-orphan")
 
+    @property
+    def formatted_date(self):
+        return self.date_applied.strftime("%d-%m-%Y") if self.date_applied else ""
+
 class StatusHistory(Base):
     __tablename__ = "status_history"
 

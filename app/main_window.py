@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
     QTableView, QListWidget, QListWidgetItem,
     QToolBar, QLineEdit, QComboBox, QLabel,
-    QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox
+    QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox, QMenu
 )
 from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont
 from PySide6.QtCore import Qt
@@ -11,8 +11,8 @@ from PySide6.QtCore import Qt
 from app.add_dialog import ApplicationDialog
 from app.database import SessionLocal
 from app.models import Application
-from app.utils import open_file as utils_open_file
 from importlib import import_module
+
 
 
 class MainWindow(QMainWindow):
@@ -52,10 +52,11 @@ class MainWindow(QMainWindow):
                 QStandardItem(app.company_name or ""),
                 QStandardItem(app.position or ""),
                 QStandardItem(app.location or ""),
-                QStandardItem(str(app.date_applied) if app.date_applied else ""),
+                QStandardItem(app.formatted_date),
                 QStandardItem(app.status or ""),
                 QStandardItem(app.source or "")
             ]
+
             for item in row:
                 item.setEditable(False)
             model.appendRow(row)
@@ -167,6 +168,74 @@ class MainWindow(QMainWindow):
         self.open_resume_button.setEnabled(bool(app.resume_file))
         self.open_cover_button.setEnabled(bool(app.cover_letter_file))
 
+    # === Right click feature to Edit and Delete
+    def open_context_menu(self, position):
+        index = self.table.indexAt(position)
+        if not index.isValid():
+            return
+
+        menu = QMenu()
+        menu.setStyleSheet("""
+            QMenu::item {
+                padding-left: 10px;   /* default biasanya 20px, kurangi */
+                padding-right: 10px;
+            }
+            QMenu {
+                margin: 5px;         /* hilangkan margin tambahan */
+            }
+        """)
+        edit_action = menu.addAction("✏️ Edit")
+        delete_action = menu.addAction("🗑️ Delete")
+
+        action = menu.exec_(self.table.viewport().mapToGlobal(position))
+
+        if action == edit_action:
+            self.edit_selected_application(index.row())
+        elif action == delete_action:
+            self.delete_selected_application(index.row())
+
+    def get_application_by_row(self, row):
+        """Ambil Application dari database berdasarkan baris yang diklik."""
+        company = self.table.model().item(row, 0).text()
+        position = self.table.model().item(row, 1).text()
+        return (
+            self.session.query(Application)
+            .filter_by(company_name=company, position=position)
+            .first()
+        )
+
+    def edit_selected_application(self, row):
+        """Buka dialog edit untuk data yang dipilih."""
+        app = self.get_application_by_row(row)
+        if not app:
+            QMessageBox.warning(self, "Not Found", "Application not found in database.")
+            return
+
+        dialog = ApplicationDialog(self.session, application=app)
+        if dialog.exec_():
+            self.session.commit()
+            self.load_data()
+            QMessageBox.information(self, "Updated", "Application updated successfully.")
+
+    def delete_selected_application(self, row):
+        """Hapus data dari database."""
+        app = self.get_application_by_row(row)
+        if not app:
+            QMessageBox.warning(self, "Not Found", "Application not found in database.")
+            return
+
+        confirm = QMessageBox.question(
+            self,
+            "Delete Confirmation",
+            f"Are you sure you want to delete application for '{app.company_name}'?",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+        if confirm == QMessageBox.Yes:
+            self.session.delete(app)
+            self.session.commit()
+            self.load_data()
+            QMessageBox.information(self, "Deleted", "Application deleted successfully.")
+
     # === Switch Page ===
     def switch_page(self, index):
         self.pages.setCurrentIndex(index)
@@ -229,8 +298,10 @@ class MainWindow(QMainWindow):
         search_filter_layout.addWidget(self.search_bar)
         search_filter_layout.addWidget(self.filter_dropdown)
 
-        # Table
+        # Table setup
         self.table = QTableView()
+        self.table.setContextMenuPolicy(Qt.CustomContextMenu)  # <— aktifkan klik kanan
+        self.table.customContextMenuRequested.connect(self.open_context_menu)
         self.table.setSortingEnabled(True)
 
         left_layout.addWidget(header_label)
@@ -258,6 +329,7 @@ class MainWindow(QMainWindow):
         self.open_cover_button.clicked.connect(
             lambda: import_module("app.utils").open_file(getattr(self, "current_cover_path", None))
         )
+
         vbox = QVBoxLayout()
         vbox.addWidget(self.detail_company)
         vbox.addWidget(self.detail_position)
@@ -291,3 +363,7 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.pages)
 
         self.side_menu.setCurrentRow(0)
+
+
+
+

@@ -159,10 +159,10 @@ Rata-rata waktu tanggapan
 Persentase status aktif
 
 
-Sprint 1	CRUD dasar + SQLite + UI Main & Form
-Sprint 2	Attach file + Status history + Search & Filter
-Sprint 3	Export CSV + Statistik dasar
-Sprint 4	Reminder + Settings + Theming + Packaging
+Sprint 1 - 1 week:	CRUD dasar + SQLite + UI Main & Form
+Sprint 2 - 3 days:	Attach file + Status history + Search & Filter
+Sprint 3 - 5 days:	Export CSV + Statistik dasar
+Sprint 4 - 1 week 2 days: 	Reminder + Settings + Theming + Packaging
 
 13. Ide Micro-UX (NEW UPDATE)!
 Saat status berubah → tampilkan mini-dialog konfirmasi / tambah komentar.

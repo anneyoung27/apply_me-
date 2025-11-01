@@ -30,6 +30,7 @@ class ApplicationDialog(QDialog):
 
         self.date_input = QDateEdit()
         self.date_input.setCalendarPopup(True)
+        self.date_input.setDisplayFormat("dd/MM/yyyy")
         self.date_input.setDate(qdate_to_date(self.date_input.date().currentDate()))
 
         self.source_input = QLineEdit()
