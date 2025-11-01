@@ -9,5 +9,5 @@ engine = create_engine(f"sqlite:///{DB_PATH}", echo=False)
 SessionLocal = sessionmaker(bind=engine)
 
 def init_db():
-    from app import models
+    # from app import models
     Base.metadata.create_all(bind=engine)

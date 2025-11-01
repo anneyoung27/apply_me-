@@ -11,6 +11,8 @@ from PySide6.QtCore import Qt
 from app.add_dialog import ApplicationDialog
 from app.database import SessionLocal
 from app.models import Application
+from app.utils import open_file as utils_open_file
+from importlib import import_module
 
 
 class MainWindow(QMainWindow):
@@ -59,6 +61,12 @@ class MainWindow(QMainWindow):
             model.appendRow(row)
 
         self.table.setModel(model)
+
+        # Saat baris di tabel diklik, tampilkan detail
+        self.table.selectionModel().selectionChanged.connect(self.show_application_details)
+
+        self.table.clicked.connect(self.show_application_details)
+
         self.table.setColumnWidth(0, 100)  # Company
         self.table.setColumnWidth(1, 100)  # Position
         self.table.setColumnWidth(2, 120)  # Location
@@ -120,6 +128,44 @@ class MainWindow(QMainWindow):
         self.table.setColumnWidth(3, 80)  # Date Applied
         self.table.setColumnWidth(4, 90)  # Status
         self.table.horizontalHeader().setStretchLastSection(True)
+
+    # === Detail panel ===
+    def show_application_details(self, index):
+        """Tampilkan detail lamaran di panel kanan saat user klik di tabel"""
+        if not index.isValid():
+            return
+
+        # Ambil baris yang diklik
+        row = index.row()
+        company = self.table.model().item(row, 0).text()  # Kolom Company
+        position = self.table.model().item(row, 1).text()  # Kolom Position
+        location = self.table.model().item(row, 2).text() # Kolom Location
+        status = self.table.model().item(row, 4).text() # Kolom Status
+
+        # Cari data lengkap di database
+        app = (
+            self.session.query(Application)
+            .filter_by(company_name=company, position=position, location=location, status=status)
+            .first()
+        )
+
+        if not app:
+            return
+
+        # Tampilkan ke panel kanan
+        self.detail_company.setText(f"Company: {app.company_name}")
+        self.detail_position.setText(f"Position: {app.position}")
+        self.detail_location.setText(f"Location: {app.location}")
+        self.detail_status.setText(f"Status: {app.status}")
+        self.detail_notes.setPlainText(app.notes or "")
+
+        # Simpan path file untuk tombol "Open"
+        self.current_resume_path = app.resume_file
+        self.current_cover_path = app.cover_letter_file
+
+        # Aktifkan / nonaktifkan tombol sesuai file ada / tidak
+        self.open_resume_button.setEnabled(bool(app.resume_file))
+        self.open_cover_button.setEnabled(bool(app.cover_letter_file))
 
     # === Switch Page ===
     def switch_page(self, index):
@@ -195,14 +241,28 @@ class MainWindow(QMainWindow):
         right_box = QGroupBox("Application Details")
         self.detail_company = QLabel("Company: -")
         self.detail_position = QLabel("Position: -")
+        self.detail_location = QLabel("Location: -")
+        self.detail_status = QLabel("Status: -")
         self.detail_notes = QTextEdit()
         self.detail_notes.setReadOnly(True)
-        self.open_resume_button = QPushButton("Open Resume")
-        self.open_cover_button = QPushButton("Open Cover Letter")
 
+        self.open_resume_button = QPushButton("Open Resume")
+        self.open_resume_button.setEnabled(False)
+        self.open_cover_button = QPushButton("Open Cover Letter")
+        self.open_cover_button.setEnabled(False)
+
+        # Hubungkan tombol file
+        self.open_resume_button.clicked.connect(
+            lambda: import_module("app.utils").open_file(getattr(self, "current_resume_path", None))
+        )
+        self.open_cover_button.clicked.connect(
+            lambda: import_module("app.utils").open_file(getattr(self, "current_cover_path", None))
+        )
         vbox = QVBoxLayout()
         vbox.addWidget(self.detail_company)
         vbox.addWidget(self.detail_position)
+        vbox.addWidget(self.detail_location)
+        vbox.addWidget(self.detail_status)
         vbox.addWidget(QLabel("Notes:"))
         vbox.addWidget(self.detail_notes)
         vbox.addWidget(self.open_resume_button)
