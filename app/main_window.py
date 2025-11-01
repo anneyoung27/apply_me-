@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QToolBar, QLineEdit, QComboBox, QLabel,
     QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox
 )
-from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem
+from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont
 from PySide6.QtCore import Qt
 
 # App imports
@@ -66,13 +66,68 @@ class MainWindow(QMainWindow):
         self.table.setColumnWidth(4, 90)  # Status
         self.table.horizontalHeader().setStretchLastSection(True)
 
+        self.search_applications()
+
+    # === Search method ===
+    def search_applications(self):
+        if not hasattr(self, "search_bar") or not hasattr(self, "filter_dropdown"):
+            return  # Pastikan widget sudah ada
+
+        search_text = self.search_bar.text().strip().lower()
+        selected_status = self.filter_dropdown.currentText()
+
+        # Query dasar
+        query = self.session.query(Application)
+
+        # Filter berdasarkan status
+        if selected_status != "All":
+            query = query.filter(Application.status == selected_status)
+
+        # Filter berdasarkan teks pencarian
+        if search_text:
+            query = query.filter(
+                (Application.company_name.ilike(f"%{search_text}%")) |
+                (Application.position.ilike(f"%{search_text}%"))
+            )
+
+        apps = query.order_by(Application.created_at.desc()).all()
+
+        # === Bangun ulang tabel ===
+        model = QStandardItemModel()
+        model.setHorizontalHeaderLabels([
+            "Company", "Position", "Location", "Date Applied", "Status", "Source"
+        ])
+
+        for app in apps:
+            row = [
+                QStandardItem(app.company_name or ""),
+                QStandardItem(app.position or ""),
+                QStandardItem(app.location or ""),
+                QStandardItem(str(app.date_applied) if app.date_applied else ""),
+                QStandardItem(app.status or ""),
+                QStandardItem(app.source or "")
+            ]
+            for item in row:
+                item.setEditable(False)
+            model.appendRow(row)
+
+        self.table.setModel(model)
+
+        # Lebar kolom stabil
+        self.table.setColumnWidth(0, 100)  # Company
+        self.table.setColumnWidth(1, 100)  # Position
+        self.table.setColumnWidth(2, 120)  # Location
+        self.table.setColumnWidth(3, 80)  # Date Applied
+        self.table.setColumnWidth(4, 90)  # Status
+        self.table.horizontalHeader().setStretchLastSection(True)
+
     # === Switch Page ===
     def switch_page(self, index):
         self.pages.setCurrentIndex(index)
 
     # === Init UI ===
     def initUI(self):
-        # === Toolbar ===
+        # --- Toolbar ---
         toolbar = QToolBar("Main Toolbar")
         self.addToolBar(toolbar)
         toolbar.setMovable(False)
@@ -81,8 +136,14 @@ class MainWindow(QMainWindow):
         import_action = QAction("Import", self)
         export_action = QAction("Export", self)
         settings_action = QAction("Settings", self)
+
         toolbar.addActions([add_action, import_action, export_action, settings_action])
         add_action.triggered.connect(self.open_add_form)
+
+        # --- Central Layout ---
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        main_layout = QHBoxLayout(central_widget)
 
         # === Side Menu ===
         self.side_menu = QListWidget()
@@ -94,69 +155,79 @@ class MainWindow(QMainWindow):
         # === Pages Container ===
         self.pages = QStackedWidget()
 
-        # =======================
-        # Page 1 — DASHBOARD
-        # =======================
+        # === PAGE 1: Dashboard ===
         self.dashboard_page = QWidget()
-        dashboard_layout = QHBoxLayout(self.dashboard_page)
+        dashboard_main_layout = QHBoxLayout(self.dashboard_page)
 
-        # Center (Table + filter bar)
-        center_layout = QVBoxLayout()
-        search_bar = QLineEdit()
-        search_bar.setPlaceholderText("Search company or position...")
-        filter_dropdown = QComboBox()
-        filter_dropdown.addItems(["All", "Applied", "Interview", "Offer", "Rejected", "Withdrawn"])
+        # --- Left (Table Area) ---
+        left_layout = QVBoxLayout()
 
-        filter_layout = QHBoxLayout()
-        filter_layout.addWidget(search_bar)
-        filter_layout.addWidget(filter_dropdown)
+        # Header
+        header_label = QLabel("MY JOB APPLICATION")
+        header_font = QFont("Segoe UI", 16, QFont.Bold)
+        header_label.setFont(header_font)
+        header_label.setAlignment(Qt.AlignCenter)
+        header_label.setStyleSheet("color: #EDEDED; margin-bottom: 10px;")
 
+        # Search & Filter
+        # === Search & Filter ===
+        self.search_bar = QLineEdit()
+        self.search_bar.setPlaceholderText("Search company or position...")
+        self.search_bar.textChanged.connect(self.search_applications)  # Realtime search
+
+        self.filter_dropdown = QComboBox()
+        self.filter_dropdown.addItems(["All", "Applied", "Interview", "Offer", "Rejected", "Withdrawn"])
+        self.filter_dropdown.currentTextChanged.connect(self.search_applications)
+
+        search_filter_layout = QHBoxLayout()
+        search_filter_layout.addWidget(self.search_bar)
+        search_filter_layout.addWidget(self.filter_dropdown)
+
+        # Table
         self.table = QTableView()
         self.table.setSortingEnabled(True)
 
-        center_layout.addLayout(filter_layout)
-        center_layout.addWidget(self.table)
+        left_layout.addWidget(header_label)
+        left_layout.addLayout(search_filter_layout)
+        left_layout.addWidget(self.table)
 
-        # Right Pane (Details)
+        # --- Right (Detail Panel) ---
         right_box = QGroupBox("Application Details")
-        vbox = QVBoxLayout(right_box)
         self.detail_company = QLabel("Company: -")
         self.detail_position = QLabel("Position: -")
         self.detail_notes = QTextEdit()
         self.detail_notes.setReadOnly(True)
         self.open_resume_button = QPushButton("Open Resume")
         self.open_cover_button = QPushButton("Open Cover Letter")
+
+        vbox = QVBoxLayout()
         vbox.addWidget(self.detail_company)
         vbox.addWidget(self.detail_position)
         vbox.addWidget(QLabel("Notes:"))
         vbox.addWidget(self.detail_notes)
         vbox.addWidget(self.open_resume_button)
         vbox.addWidget(self.open_cover_button)
+        right_box.setLayout(vbox)
         right_box.setFixedWidth(300)
 
-        # Combine Dashboard Layout
-        dashboard_layout.addLayout(center_layout)
-        dashboard_layout.addWidget(right_box)
+        # Combine left & right
+        dashboard_main_layout.addLayout(left_layout)
+        dashboard_main_layout.addWidget(right_box)
 
-        # =======================
-        # Page 2 — STATISTICS
-        # =======================
+        # === PAGE 2: Statistics ===
         self.stats_page = QWidget()
         stats_layout = QVBoxLayout(self.stats_page)
-        stats_layout.addWidget(QLabel("📊 Statistics Page — Coming Soon..."))
+        stats_label = QLabel("📊 Statistics Page — coming soon...")
+        stats_label.setAlignment(Qt.AlignCenter)
+        stats_label.setStyleSheet("font-size: 14px; color: #555;")
+        stats_layout.addWidget(stats_label)
 
-        # Add pages to stack
+        # Tambahkan ke stacked widget
         self.pages.addWidget(self.dashboard_page)
         self.pages.addWidget(self.stats_page)
 
-        # === Root Layout ===
-        root_layout = QHBoxLayout()
-        root_layout.addWidget(self.side_menu)
-        root_layout.addWidget(self.pages)
+        # Gabungkan Side Menu + Pages
+        main_layout.addWidget(self.side_menu)
+        main_layout.addWidget(self.pages)
 
-        container = QWidget()
-        container.setLayout(root_layout)
-        self.setCentralWidget(container)
-
-        # Default ke Dashboard
         self.side_menu.setCurrentRow(0)

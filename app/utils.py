@@ -12,3 +12,5 @@ def export_to_csv(session, filepath="applications_export.csv"):
 
 def qdate_to_date(qdate):
     return date(qdate.year(), qdate.month(), qdate.day()) if qdate else None
+
+
