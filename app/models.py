@@ -6,7 +6,7 @@ from app.database import Base
 class Application(Base):
     __tablename__ = "applications"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     company_name = Column(String, nullable=False)
     position = Column(String, nullable=False)
     location = Column(String)
@@ -32,11 +32,10 @@ class StatusHistory(Base):
     __tablename__ = "status_history"
 
     id = Column(Integer, primary_key=True)
-    application_id = Column(Integer, ForeignKey("applications.id"))
+    application_id = Column(String, ForeignKey("applications.id"))
     old_status = Column(String)
     new_status = Column(String)
     timestamp = Column(DateTime, default=datetime.now)
-    comment = Column(Text)
 
     application = relationship("Application", back_populates="status_history")
 
@@ -44,7 +43,7 @@ class Contact(Base):
     __tablename__ = "contacts"
 
     id = Column(Integer, primary_key=True)
-    application_id = Column(Integer, ForeignKey("applications.id"))
+    application_id = Column(String, ForeignKey("applications.id"))
     name = Column(String)
     role = Column(String)
     email = Column(String)
@@ -57,7 +56,7 @@ class Reminder(Base):
     __tablename__ = "reminders"
 
     id = Column(Integer, primary_key=True)
-    application_id = Column(Integer, ForeignKey("applications.id"))
+    application_id = Column(String, ForeignKey("applications.id"))
     remind_at = Column(DateTime)
     message = Column(Text)
     done = Column(Boolean, default=False)

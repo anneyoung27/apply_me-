@@ -139,33 +139,81 @@ class ApplicationDialog(QDialog):
 
     # === Save Handler ===
     def save_data(self):
+        from PySide6.QtWidgets import QMessageBox
+        from datetime import datetime
+        from app.models import StatusHistory  # pastikan ini sesuai path kamu
+
         company = self.company_input.text().strip()
         position = self.position_input.text().strip()
 
         if not company or not position:
-            # Validasi sederhana
-            from PySide6.QtWidgets import QMessageBox
             QMessageBox.warning(self, "Error", "Company name and position are required.")
             return
 
         if self.application:
             # === Edit mode ===
             app = self.application
+            old_status = app.status  # Simpan status lama sebelum diubah
         else:
             # === Add mode ===
             app = Application()
-            self.session.add(app)
 
+            # === Generate custom ID (e.g. TO001, TO002) ===
+            prefix = company[:2].upper()
+            last_app = (
+                self.session.query(Application)
+                .filter(Application.id.like(f"{prefix}%"))
+                .order_by(Application.id.desc())
+                .first()
+            )
+
+            if last_app:
+                last_num = int(last_app.id[-3:])
+                new_num = last_num + 1
+            else:
+                new_num = 1
+
+            app.id = f"{prefix}{new_num:03d}"
+            self.session.add(app)
+            old_status = None  # Tidak ada status lama karena data baru
+
+        # === Simpan data ke Application ===
         app.company_name = company
         app.position = position
         app.location = self.location_input.text().strip()
         app.date_applied = qdate_to_date(self.date_input.date().currentDate())
         app.source = self.source_input.text().strip()
-        app.status = self.status_input.currentText()
+        new_status = self.status_input.currentText()
+        app.status = new_status
         app.salary_expectation = self.salary_input.text().strip()
         app.notes = self.notes_input.toPlainText().strip()
         app.resume_file = self.resume_path
         app.cover_letter_file = self.cover_path
 
+        # === Commit dulu untuk pastikan ID tersimpan ===
+        self.session.commit()
+
+        # === Tambahkan ke StatusHistory ===
+        # Jika data baru, tambahkan entri awal
+        if not self.application:
+            history = StatusHistory(
+                application_id=app.id,
+                old_status=None,
+                new_status=new_status,
+                timestamp=datetime.now()
+            )
+            self.session.add(history)
+
+        # Jika edit dan status berubah, simpan perubahan ke history
+        elif old_status != new_status:
+            history = StatusHistory(
+                application_id=app.id,
+                old_status=old_status,
+                new_status=new_status,
+                timestamp=datetime.now()
+            )
+            self.session.add(history)
+
+        # === Simpan semua ke DB ===
         self.session.commit()
         self.accept()

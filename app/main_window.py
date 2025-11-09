@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
-    QTableView, QListWidget, QListWidgetItem,
+    QTableView,
     QToolBar, QLineEdit, QComboBox, QLabel,
     QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox, QMenu
 )
@@ -13,7 +13,6 @@ from app.database import SessionLocal
 from app.models import Application
 from importlib import import_module
 from datetime import datetime
-
 
 
 class MainWindow(QMainWindow):
@@ -244,6 +243,9 @@ class MainWindow(QMainWindow):
     # === Switch Page ===
     def switch_page(self, index):
         self.pages.setCurrentIndex(index)
+
+    # === Status changed for Status_History table ===
+
 
     # === Init UI ===
     def initUI(self):
