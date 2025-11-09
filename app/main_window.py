@@ -4,8 +4,8 @@ from PySide6.QtWidgets import (
     QToolBar, QLineEdit, QComboBox, QLabel,
     QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox, QMenu
 )
-from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont, QIcon, QPixmap
+from PySide6.QtCore import Qt, QSize
 
 # App imports
 from app.add_dialog import ApplicationDialog
@@ -20,6 +20,10 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Apply Me — Job Tracker")
         self.resize(1200, 700)
+
+        # Nonaktifkan tombol maximize
+        self.setFixedSize(self.width(), self.height())
+
         self.session = SessionLocal()
 
         self.initUI()
@@ -177,7 +181,7 @@ class MainWindow(QMainWindow):
         menu = QMenu()
         menu.setStyleSheet("""
             QMenu::item {
-                padding-left: 10px;   /* default biasanya 20px, kurangi */
+                padding-left: 12px;   /* default biasanya 20px, kurangi */
                 padding-right: 10px;
             }
             QMenu {
@@ -251,8 +255,9 @@ class MainWindow(QMainWindow):
         import_action = QAction("Import", self)
         export_action = QAction("Export", self)
         settings_action = QAction("Settings", self)
+        about_action = QAction("About", self)
 
-        toolbar.addActions([add_action, import_action, export_action, settings_action])
+        toolbar.addActions([add_action, import_action, export_action, settings_action, about_action])
         add_action.triggered.connect(self.open_add_form)
 
         # --- Central Layout ---
@@ -260,19 +265,106 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         main_layout = QHBoxLayout(central_widget)
 
+        # === SIDE MENU CONTAINER (dengan border kanan) ===
+        self.side_menu_container = QWidget()
+        container_layout = QVBoxLayout(self.side_menu_container)
+        container_layout.setContentsMargins(0, 0, 0, 0)
+        container_layout.setSpacing(0)
+
+        self.side_menu_container.setStyleSheet("""
+            QWidget {
+                background-color: #212121;
+                border-right: 1px solid #FFFFFF;
+            }
+        """)
+
         # === Side Menu ===
-        self.side_menu = QListWidget()
+        self.side_menu = QWidget()
+        side_layout = QVBoxLayout(self.side_menu)
+        side_layout.setContentsMargins(0, 0, 0, 0)
+        side_layout.setSpacing(0)
         self.side_menu.setFixedWidth(180)
-        self.side_menu.addItem(QListWidgetItem("🏠 Dashboard"))
-        self.side_menu.addItem(QListWidgetItem("📊 Statistics"))
-        self.side_menu.currentRowChanged.connect(self.switch_page)
+
+        self.side_menu.setStyleSheet("""
+            QPushButton {
+                text-align: left;
+                padding: 10px 16px;
+                font-size: 13px;
+                color: #dddddd;
+                border: none;
+                background-color: transparent;
+            }
+            QPushButton:hover {
+                background-color: #1f1f1f;
+                color: #ffffff;
+            }
+            QPushButton:checked {
+                background-color: #2563eb;
+                color: white;
+                font-weight: bold;
+                border-right: none; /* Pastikan border tidak muncul di tombol aktif */
+            }
+        """)
+
+        # Tombol menu dengan ikon
+        btn_dashboard = QPushButton("  Dashboard")
+        btn_dashboard.setIcon(QIcon("assets/icons/home.png"))
+        btn_dashboard.setIconSize(QSize(18, 18))
+
+        btn_stats = QPushButton("  Statistics")
+        btn_stats.setIcon(QIcon("assets/icons/statistics.png"))
+        btn_stats.setIconSize(QSize(18, 18))
+
+        btn_reminders = QPushButton("  Reminders")
+        btn_reminders.setIcon(QIcon("assets/icons/reminders.png"))
+        btn_reminders.setIconSize(QSize(18, 18))
+
+        btn_contacts = QPushButton("  Contacts")
+        btn_contacts.setIcon(QIcon("assets/icons/contacts.png"))
+        btn_contacts.setIconSize(QSize(18, 18))
+
+        # self.side_menu.addItem(QListWidgetItem("Home"))
+        # self.side_menu.addItem(QListWidgetItem("Statistics"))
+        # self.side_menu.addItem(QListWidgetItem("Reminders"))
+        # self.side_menu.addItem(QListWidgetItem("Contacts"))
+        #
+        # self.side_menu.currentRowChanged.connect(self.switch_page)
+
+        # Tambahkan tombol ke layout
+        for btn in [btn_dashboard, btn_stats, btn_reminders, btn_contacts]:
+            btn.setCheckable(True)
+            side_layout.addWidget(btn)
+
+        side_layout.addStretch()
+        self.side_menu_container.setFixedWidth(180)
+
+        container_layout.addWidget(self.side_menu)
+
+        # === Hubungkan tombol ke halaman ===
+        btn_dashboard.clicked.connect(lambda: self.pages.setCurrentWidget(self.home_page))
+        btn_stats.clicked.connect(lambda: self.pages.setCurrentWidget(self.stats_page))
+        btn_reminders.clicked.connect(lambda: self.pages.setCurrentWidget(self.reminders_page))
+        btn_contacts.clicked.connect(lambda: self.pages.setCurrentWidget(self.contact_page))
+
+        # === Buat agar tombol aktif (checked) berubah otomatis ===
+        def set_active_button(active_button):
+            for b in [btn_dashboard, btn_stats, btn_reminders, btn_contacts]:
+                b.setChecked(b == active_button)
+
+        btn_dashboard.clicked.connect(lambda: set_active_button(btn_dashboard))
+        btn_stats.clicked.connect(lambda: set_active_button(btn_stats))
+        btn_reminders.clicked.connect(lambda: set_active_button(btn_reminders))
+        btn_contacts.clicked.connect(lambda: set_active_button(btn_contacts))
+
+        # Default aktif: Dashboard
+        btn_dashboard.setChecked(True)
 
         # === Pages Container ===
         self.pages = QStackedWidget()
 
-        # === PAGE 1: Dashboard ===
-        self.dashboard_page = QWidget()
-        dashboard_main_layout = QHBoxLayout(self.dashboard_page)
+        # === PAGE 1: Home ===
+        self.home_page = QWidget()
+        home_main_layout = QHBoxLayout(self.home_page)
 
         # --- Left (Table Area) ---
         left_layout = QVBoxLayout()
@@ -343,26 +435,47 @@ class MainWindow(QMainWindow):
         right_box.setFixedWidth(300)
 
         # Combine left & right
-        dashboard_main_layout.addLayout(left_layout)
-        dashboard_main_layout.addWidget(right_box)
+        home_main_layout.addLayout(left_layout)
+        home_main_layout.addWidget(right_box)
 
         # === PAGE 2: Statistics ===
         self.stats_page = QWidget()
         stats_layout = QVBoxLayout(self.stats_page)
-        stats_label = QLabel("📊 Statistics Page — coming soon...")
+        stats_label = QLabel("Statistics Page — coming soon...")
         stats_label.setAlignment(Qt.AlignCenter)
         stats_label.setStyleSheet("font-size: 14px; color: #555;")
         stats_layout.addWidget(stats_label)
 
+        # === PAGE 3: Reminders ===
+        self.reminders_page = QWidget()
+        reminders_layout = QVBoxLayout(self.reminders_page)
+        reminders_label = QLabel("Reminders Page — coming soon...")
+        reminders_label.setAlignment(Qt.AlignCenter)
+        reminders_label.setStyleSheet("font-size: 14px; color: #555;")
+        reminders_layout.addWidget(reminders_label)
+
+        # === PAGE 4: Contacts ===
+        self.contact_page = QWidget()
+        contact_layout = QVBoxLayout(self.contact_page)
+
+        contact_label = QLabel("Contact Page — coming soon...")
+        contact_label.setAlignment(Qt.AlignCenter)
+        contact_label.setStyleSheet("font-size: 14px; color: #555;")
+
+        contact_layout.addWidget(contact_label)
+
+
         # Tambahkan ke stacked widget
-        self.pages.addWidget(self.dashboard_page)
+        self.pages.addWidget(self.home_page)
         self.pages.addWidget(self.stats_page)
+        self.pages.addWidget(self.reminders_page)
+        self.pages.addWidget(self.contact_page)
 
         # Gabungkan Side Menu + Pages
         main_layout.addWidget(self.side_menu)
         main_layout.addWidget(self.pages)
 
-        self.side_menu.setCurrentRow(0)
+        # self.side_menu.setCurrentRow(0)
 
 
 

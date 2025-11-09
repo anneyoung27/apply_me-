@@ -48,7 +48,8 @@ old_status
 new_status
 timestamp
 comment
-contacts
+
+C. contacts
 id
 application_id
 name
@@ -87,6 +88,7 @@ Detail Application (Full view)
 Statistics / Analytics
     Grafik sederhana: matplotlib atau QtCharts (embedded) untuk bar / pie chart.
     KPI cards: total applied, interviews, offers, response rate.
+
 Settings
     Backup & restore path, theme choice, auto-backup toggle.
 
