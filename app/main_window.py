@@ -128,11 +128,11 @@ class MainWindow(QMainWindow):
         self.table.setModel(model)
 
         # Lebar kolom stabil
-        self.table.setColumnWidth(0, 100)  # Company
-        self.table.setColumnWidth(1, 125)  # Position
-        self.table.setColumnWidth(2, 110)  # Location
-        self.table.setColumnWidth(3, 95)  # Date Applied
-        self.table.setColumnWidth(4, 90)  # Status
+        self.table.setColumnWidth(0, 95)  # Company
+        self.table.setColumnWidth(1, 120)  # Position
+        self.table.setColumnWidth(2, 100)  # Location
+        self.table.setColumnWidth(3, 85)  # Date Applied
+        self.table.setColumnWidth(4, 70)  # Status
         self.table.horizontalHeader().setStretchLastSection(True)
 
     # === Detail panel ===
@@ -189,8 +189,8 @@ class MainWindow(QMainWindow):
                 margin: 5px;         /* hilangkan margin tambahan */
             }
         """)
-        edit_action = menu.addAction("✏️ Edit")
-        delete_action = menu.addAction("🗑️ Delete")
+        edit_action = menu.addAction("✏️  Edit")
+        delete_action = menu.addAction("🗑️  Delete")
 
         action = menu.exec_(self.table.viewport().mapToGlobal(position))
 
@@ -391,12 +391,38 @@ class MainWindow(QMainWindow):
         search_filter_layout.addWidget(self.search_bar)
         search_filter_layout.addWidget(self.filter_dropdown)
 
-        # Table setup
+        # === TABLE SETUP ===
         self.table = QTableView()
-        self.table.setContextMenuPolicy(Qt.CustomContextMenu)  # <— aktifkan klik kanan
+        self.table.setContextMenuPolicy(Qt.CustomContextMenu)  # aktifkan klik kanan
         self.table.customContextMenuRequested.connect(self.open_context_menu)
         self.table.setSortingEnabled(True)
 
+        # Hapus kolom nomor (row header)
+        self.table.verticalHeader().setVisible(False)
+
+        # Opsional: agar kolom otomatis pas dan rapi
+        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.horizontalHeader().setDefaultSectionSize(160)
+
+        # Styling agar lebih menyatu dengan tema gelap
+        self.table.setStyleSheet("""
+            QTableView {
+                background-color: #1e1e1e;
+                color: #ddd;
+                gridline-color: #333;
+                border: none;
+                selection-background-color: #1565c0;
+                selection-color: white;
+            }
+            QHeaderView::section {
+                background-color: #2b2b2b;
+                color: #ddd;
+                padding: 4px;
+                border: none;
+            }
+        """)
+
+        # Tambahkan ke layout kiri
         left_layout.addWidget(header_label)
         left_layout.addLayout(search_filter_layout)
         left_layout.addWidget(self.table)
@@ -513,7 +539,7 @@ class MainWindow(QMainWindow):
         # === GABUNG KE LAYOUT UTAMA ===
         home_main_layout.addLayout(left_layout)
         home_main_layout.addWidget(right_container)
-        home_main_layout.setStretch(0, 1)  # kiri fleksibel
+        home_main_layout.setStretch(0, 2)  # kiri fleksibel
         home_main_layout.setStretch(1, 0)  # kanan tetap
 
         # === PAGE 2: Statistics ===
