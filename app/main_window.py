@@ -13,6 +13,7 @@ from app.database import SessionLocal
 from app.models import Application
 from importlib import import_module
 from app.exporter_menu import DataExporter
+from app.import_menu import DataImporter
 from datetime import datetime
 
 
@@ -257,11 +258,10 @@ class MainWindow(QMainWindow):
 
         add_action = QAction("Add", self)
         import_action = QAction("Import", self)
-        export_action = QAction("Export", self)
         settings_action = QAction("Settings", self)
         about_action = QAction("About", self)
 
-        toolbar.addActions([add_action, import_action, export_action, settings_action, about_action])
+        toolbar.addActions([add_action, import_action, settings_action, about_action])
         add_action.triggered.connect(self.open_add_form) # ADD DATA ACTION
 
         # === EXPORT ACTION AND SUB MENU ===
@@ -275,17 +275,17 @@ class MainWindow(QMainWindow):
             }
         """)
 
-        # === SUB MENU ===
+        # === EXPORT - SUB MENU ===
         export_menu = QMenu(export_button)
         to_csv_action = export_menu.addAction("📄 Export to CSV")
         to_excel_action = export_menu.addAction("📊 Export to Excel")
         export_menu.setStyleSheet("""
                     QMenu::item {
-                        padding-left: 12px;   /* default biasanya 20px, kurangi */
+                        padding-left: 12px;    /* default biasanya 20px, kurangi */
                         padding-right: 10px;
                     }
                     QMenu {
-                        margin: 8px;         /* hilangkan margin tambahan */
+                        margin: 8px;           /* hilangkan margin tambahan */
                     }
                 """)
         export_button.setMenu(export_menu)
@@ -301,6 +301,9 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(export_button)  # ganti addAction() → addWidget()
         toolbar.addAction(settings_action)
         toolbar.addAction(about_action)
+
+        # === IMPORT ACTION ===
+        import_action.triggered.connect(lambda: DataImporter(self).import_from_excel())
 
         # --- Central Layout ---
         central_widget = QWidget()

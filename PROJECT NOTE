@@ -20,7 +20,7 @@ Sinkronisasi cloud (Google Drive / Dropbox) atau backup otomatis.
 Integrasi kalender (Google Calendar) untuk interview.
 Statistik & dashboard: jumlah apply / minggu, rasio interview / offer, average response time.
 Multiple profiles (mis. track untuk beberapa akun/genre pekerjaan).
-Import dari LinkedIn/CSV (scraping/import file).
+Import dari Excel
 Dark mode + theme switcher.
 
 Struktur data (contoh skema SQLite)
@@ -99,6 +99,9 @@ Alur pengguna (user flow)
     Ganti status via dropdown → otomatis create entry di status_history. (DONE - 9-11-2025)
     Attach resume / cover letter → file dicopy ke folder assets/files/<app_id>/.
     Export CSV untuk laporan atau backup database. (DONE - 9-11-2025)
+    Import data dengan Excel
+    About -> App, How To? documentation (Export, Import, Create, Update, Delete)
+        -> Import (kolom wajib = company_name, position, location, date_applied, dan status )
 
 Rekomendasi teknis
     GUI: PySide6 (sudah dipilih). Gunakan Qt Designer untuk UI, konversi .ui ke Python.
