@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
     QTableView,
     QToolBar, QLineEdit, QComboBox, QLabel,
-    QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox, QMenu
+    QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox, QMenu, QToolButton
 )
 from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont, QIcon
 from PySide6.QtCore import Qt, QSize, QTimer
@@ -12,6 +12,7 @@ from app.add_dialog import ApplicationDialog
 from app.database import SessionLocal
 from app.models import Application
 from importlib import import_module
+from app.exporter_menu import DataExporter
 from datetime import datetime
 
 
@@ -261,7 +262,45 @@ class MainWindow(QMainWindow):
         about_action = QAction("About", self)
 
         toolbar.addActions([add_action, import_action, export_action, settings_action, about_action])
-        add_action.triggered.connect(self.open_add_form)
+        add_action.triggered.connect(self.open_add_form) # ADD DATA ACTION
+
+        # === EXPORT ACTION AND SUB MENU ===
+        export_button = QToolButton()
+        export_button.setText("Export")
+        export_button.setPopupMode(QToolButton.MenuButtonPopup)
+        export_button.setStyleSheet("""
+            QToolButton {
+                padding: 5px 10px;
+                font-weight: 500;
+            }
+        """)
+
+        # === SUB MENU ===
+        export_menu = QMenu(export_button)
+        to_csv_action = export_menu.addAction("📄 Export to CSV")
+        to_excel_action = export_menu.addAction("📊 Export to Excel")
+        export_menu.setStyleSheet("""
+                    QMenu::item {
+                        padding-left: 12px;   /* default biasanya 20px, kurangi */
+                        padding-right: 10px;
+                    }
+                    QMenu {
+                        margin: 8px;         /* hilangkan margin tambahan */
+                    }
+                """)
+        export_button.setMenu(export_menu)
+
+        # === EXPORTER CLASS ===
+        exporter = DataExporter(self.session, Application)
+        to_csv_action.triggered.connect(lambda: exporter.export_to_csv(self))
+        to_excel_action.triggered.connect(lambda: exporter.export_to_excel(self))
+
+        # === MASUKKAN KE TOOLBAR ===
+        toolbar.addAction(add_action)
+        toolbar.addAction(import_action)
+        toolbar.addWidget(export_button)  # ganti addAction() → addWidget()
+        toolbar.addAction(settings_action)
+        toolbar.addAction(about_action)
 
         # --- Central Layout ---
         central_widget = QWidget()

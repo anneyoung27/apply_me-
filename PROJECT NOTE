@@ -96,9 +96,9 @@ Alur pengguna (user flow)
     Buka app → otomatis load data lokal.
     Klik Add → isi company, position, date → Save.
     Di main table, klik row → lihat detail di panel kanan.
-    Ganti status via dropdown → otomatis create entry di status_history.
+    Ganti status via dropdown → otomatis create entry di status_history. (DONE - 9-11-2025)
     Attach resume / cover letter → file dicopy ke folder assets/files/<app_id>/.
-    Export CSV untuk laporan atau backup database.
+    Export CSV untuk laporan atau backup database. (DONE - 9-11-2025)
 
 Rekomendasi teknis
     GUI: PySide6 (sudah dipilih). Gunakan Qt Designer untuk UI, konversi .ui ke Python.
