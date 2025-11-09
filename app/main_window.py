@@ -4,14 +4,15 @@ from PySide6.QtWidgets import (
     QToolBar, QLineEdit, QComboBox, QLabel,
     QStackedWidget, QPushButton, QGroupBox, QTextEdit, QMessageBox, QMenu
 )
-from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont, QIcon, QPixmap
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont, QIcon
+from PySide6.QtCore import Qt, QSize, QTimer
 
 # App imports
 from app.add_dialog import ApplicationDialog
 from app.database import SessionLocal
 from app.models import Application
 from importlib import import_module
+from datetime import datetime
 
 
 
@@ -128,9 +129,9 @@ class MainWindow(QMainWindow):
 
         # Lebar kolom stabil
         self.table.setColumnWidth(0, 100)  # Company
-        self.table.setColumnWidth(1, 100)  # Position
-        self.table.setColumnWidth(2, 120)  # Location
-        self.table.setColumnWidth(3, 80)  # Date Applied
+        self.table.setColumnWidth(1, 125)  # Position
+        self.table.setColumnWidth(2, 110)  # Location
+        self.table.setColumnWidth(3, 95)  # Date Applied
         self.table.setColumnWidth(4, 90)  # Status
         self.table.horizontalHeader().setStretchLastSection(True)
 
@@ -400,27 +401,91 @@ class MainWindow(QMainWindow):
         left_layout.addLayout(search_filter_layout)
         left_layout.addWidget(self.table)
 
-        # --- Right (Detail Panel) ---
+        # --- Right (APPLICATION DETAIL PANEL) ---
+        right_container = QWidget()
+        right_container.setFixedWidth(320)
+
+        right_layout = QVBoxLayout(right_container)
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.setSpacing(6)
+
+        # === REAL-TIME CLOCK (di atas panel) ===
+        self.running_time_label = QLabel()
+        self.running_time_label.setAlignment(Qt.AlignCenter)
+        self.running_time_label.setStyleSheet("""
+            font-size: 13px;
+            color: #e0e0e0;
+            background-color: #212121;
+            padding: 6px 10px;
+            border-bottom: 1px solid #333;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        """)
+
+        def update_running_time():
+            now = datetime.now()
+            formatted = now.strftime("%A, %d %B %Y %H:%M:%S")
+            self.running_time_label.setText(f"🕒 {formatted}")
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(update_running_time)
+        self.timer.start(1000)
+        update_running_time()
+
+        # === (Right) APPLICATION DETAILS BOX ===
         right_box = QGroupBox("Application Details")
+        right_box.setStyleSheet("""
+            QGroupBox {
+                background-color: #212121;
+                border: 1px solid #2e2e2e;
+                border-radius: 8px;
+                margin-top: 6px;
+                color: #e0e0e0;
+                font-weight: 600;
+                font-size: 12.5px;
+                padding-top: 12px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                subcontrol-position: top left;
+                padding: 0 8px;
+                color: #FFFFFF;
+                font-weight: bold;
+                background-color: #212121;
+            }
+        """)
+
         self.detail_company = QLabel("Company: -")
         self.detail_position = QLabel("Position: -")
         self.detail_location = QLabel("Location: -")
         self.detail_status = QLabel("Status: -")
+
         self.detail_notes = QTextEdit()
         self.detail_notes.setReadOnly(True)
+        self.detail_notes.setMinimumHeight(120)
 
         self.open_resume_button = QPushButton("Open Resume")
         self.open_resume_button.setEnabled(False)
         self.open_cover_button = QPushButton("Open Cover Letter")
         self.open_cover_button.setEnabled(False)
 
-        # Hubungkan tombol file
-        self.open_resume_button.clicked.connect(
-            lambda: import_module("app.utils").open_file(getattr(self, "current_resume_path", None))
-        )
-        self.open_cover_button.clicked.connect(
-            lambda: import_module("app.utils").open_file(getattr(self, "current_cover_path", None))
-        )
+        for btn in [self.open_resume_button, self.open_cover_button]:
+            btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #2a2a2a;
+                    color: #999;
+                    border: 1px solid #444;
+                    border-radius: 4px;
+                    padding: 5px;
+                }
+                QPushButton:enabled {
+                    background-color: #1e88e5;
+                    color: white;
+                }
+                QPushButton:hover:enabled {
+                    background-color: #1565c0;
+                }
+            """)
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.detail_company)
@@ -432,11 +497,24 @@ class MainWindow(QMainWindow):
         vbox.addWidget(self.open_resume_button)
         vbox.addWidget(self.open_cover_button)
         right_box.setLayout(vbox)
-        right_box.setFixedWidth(300)
 
-        # Combine left & right
+        # === SUSUN DALAM RIGHT CONTAINER ===
+        right_layout.addWidget(self.running_time_label)
+        right_layout.addWidget(right_box)
+        right_layout.addStretch()
+
+        # Hilangkan addStretch(), gantikan dengan agar isi vertikal memenuhi tinggi
+        right_layout.setStretch(0, 0)  # time label
+        right_layout.setStretch(1, 1)  # right_box isi penuh vertikal
+
+        right_container.setLayout(right_layout)
+        right_container.setFixedWidth(340)
+
+        # === GABUNG KE LAYOUT UTAMA ===
         home_main_layout.addLayout(left_layout)
-        home_main_layout.addWidget(right_box)
+        home_main_layout.addWidget(right_container)
+        home_main_layout.setStretch(0, 1)  # kiri fleksibel
+        home_main_layout.setStretch(1, 0)  # kanan tetap
 
         # === PAGE 2: Statistics ===
         self.stats_page = QWidget()
