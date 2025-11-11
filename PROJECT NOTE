@@ -89,18 +89,22 @@ Statistics / Analytics
     Grafik sederhana: matplotlib atau QtCharts (embedded) untuk bar / pie chart.
     KPI cards: total applied, interviews, offers, response rate.
 
-Settings
-    Backup & restore path, theme choice, auto-backup toggle.
 
-Alur pengguna (user flow)
-    Buka app → otomatis load data lokal.
-    Klik Add → isi company, position, date → Save.
-    Di main table, klik row → lihat detail di panel kanan.
+Alur pengguna (user flow) - Dashboard Menu
+    Buka app → otomatis load data lokal. (DONE - 31-10-2025)
+    Klik Add → isi company, position, date → Save. (DONE - 31-10-2025)
+    Di main table, klik row → lihat detail di panel kanan. (DONE - 31-10-2025)
     Ganti status via dropdown → otomatis create entry di status_history. (DONE - 9-11-2025)
-    Attach resume / cover letter → file dicopy ke folder assets/files/<app_id>/.
-    Export CSV untuk laporan atau backup database. (DONE - 9-11-2025)
-    Import data dengan Excel
-    About -> App, How To? documentation (Export, Import, Create, Update, Delete)
+    Attach resume / cover letter → file dicopy ke folder assets/files/<app_id>/ (DONE - 31-10-2025)
+    Export data ke CSV dan Excel untuk laporan dari database. (DONE - 9-11-2025)
+    Import data dengan Excel (DONE - 9-11-2025)
+    Settings : (IN PROGRESS)
+        a. Database Settings (Backup Database)
+        b. Data Management (Auto Export - semua d ata ke CSV setiap akhir tahun bulan 12)
+        c. Notifications & Reminders (Enable Reminder notifications kalau ON > reminder time 'interview' berapa hari lagi 'message box' dengan sound notification alert saat buka app kaya email outlook,
+        terus icon notif di pojok kanan atas menampilkan list nama company, sisah berapa hari lagi menuju interview / offer, kalau OFF ga ada)
+        d. Advanced Settings (enable sql logging, reset application to default)
+    About -> App, How To? documentation (Export, Import, Create, Update, Delete) (IN PROGRESS)
         -> Import (kolom wajib = company_name, position, location, date_applied, dan status )
 
 Rekomendasi teknis

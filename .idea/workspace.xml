@@ -5,10 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e061ca9-e003-40c8-a0e9-5517b85a9691" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/import_menu.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/head_menu/advanced-setting.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/head_menu/csv-file.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/head_menu/data_management.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/head_menu/database_management.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/head_menu/notification.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/head_menu/xlsx-file.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PROJECT NOTE" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT NOTE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/exporter_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/exporter_menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main_window.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,20 +51,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_window.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/CodeProject/Python/apply_me!/assets/icons&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "Python.main_window.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/CodeProject/Python/apply_me!/assets/head_menu",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\CodeProject\Python\apply_me!\assets\head_menu" />
+      <recent name="D:\CodeProject\Python\apply_me!\assets\setting" />
       <recent name="D:\CodeProject\Python\apply_me!\assets\icons" />
     </key>
   </component>

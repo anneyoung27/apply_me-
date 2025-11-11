@@ -10,5 +10,5 @@ SessionLocal = sessionmaker(bind=engine)
 
 def init_db():
     # from app import models
-    # Base.metadata.drop_all(bind=engine)
+    # Base.metadata.drop_all(bind=engine) # for reset / delete the database
     Base.metadata.create_all(bind=engine)

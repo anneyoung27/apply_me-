@@ -246,9 +246,6 @@ class MainWindow(QMainWindow):
     def switch_page(self, index):
         self.pages.setCurrentIndex(index)
 
-    # === Status changed for Status_History table ===
-
-
     # === Init UI ===
     def initUI(self):
         # --- Toolbar ---
@@ -258,27 +255,24 @@ class MainWindow(QMainWindow):
 
         add_action = QAction("Add", self)
         import_action = QAction("Import", self)
-        settings_action = QAction("Settings", self)
         about_action = QAction("About", self)
 
-        toolbar.addActions([add_action, import_action, settings_action, about_action])
+        toolbar.addActions([add_action, import_action, about_action])
         add_action.triggered.connect(self.open_add_form) # ADD DATA ACTION
 
         # === EXPORT ACTION AND SUB MENU ===
         export_button = QToolButton()
         export_button.setText("Export")
         export_button.setPopupMode(QToolButton.MenuButtonPopup)
-        export_button.setStyleSheet("""
-            QToolButton {
-                padding: 5px 10px;
-                font-weight: 500;
-            }
-        """)
+        export_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        export_button.setStyleSheet("padding-left: 15px; qproperty-iconSize: 18px")
 
         # === EXPORT - SUB MENU ===
         export_menu = QMenu(export_button)
-        to_csv_action = export_menu.addAction("📄 Export to CSV")
-        to_excel_action = export_menu.addAction("📊 Export to Excel")
+        to_csv_action = export_menu.addAction("Export to CSV")
+        to_csv_action.setIcon(QIcon("assets/head_menu/csv-file.png"))
+        to_excel_action = export_menu.addAction("Export to Excel")
+        to_excel_action.setIcon(QIcon("assets/head_menu/xlsx-file.png"))
         export_menu.setStyleSheet("""
                     QMenu::item {
                         padding-left: 12px;    /* default biasanya 20px, kurangi */
@@ -295,11 +289,40 @@ class MainWindow(QMainWindow):
         to_csv_action.triggered.connect(lambda: exporter.export_to_csv(self))
         to_excel_action.triggered.connect(lambda: exporter.export_to_excel(self))
 
+        # === SETTINGS ACTION AND SUB MENU ===
+        setting_button = QToolButton()
+        setting_button.setText("Preferences")
+        setting_button.setPopupMode(QToolButton.MenuButtonPopup)
+        setting_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        setting_button.setStyleSheet("padding-left: 15px; qproperty-iconSize: 18px")
+
+        setting_menu = QMenu(setting_button)
+
+        database_management = setting_menu.addAction("Database Management")
+        database_management.setIcon(QIcon("assets/head_menu/database_management.png"))
+        data_management = setting_menu.addAction("Data Management")
+        data_management.setIcon(QIcon("assets/head_menu/data_management.png"))
+        notification_and_reminders = setting_menu.addAction("Notification and Reminders")
+        notification_and_reminders.setIcon(QIcon("assets/head_menu/notification.png"))
+        advanced_setting = setting_menu.addAction("Advanced Setting")
+        advanced_setting.setIcon(QIcon("assets/head_menu/advanced-setting.png"))
+        setting_menu.setStyleSheet("""
+                            QMenu::item {
+                                padding-left: 12px;    /* default biasanya 20px, kurangi */
+                                padding-right: 10px;
+                            }
+                            QMenu {
+                                margin: 8px;           /* hilangkan margin tambahan */
+                            }
+                        """)
+        setting_button.setMenu(setting_menu)
+
+
         # === MASUKKAN KE TOOLBAR ===
         toolbar.addAction(add_action)
         toolbar.addAction(import_action)
-        toolbar.addWidget(export_button)  # ganti addAction() → addWidget()
-        toolbar.addAction(settings_action)
+        toolbar.addWidget(export_button)
+        toolbar.addWidget(setting_button)
         toolbar.addAction(about_action)
 
         # === IMPORT ACTION ===
