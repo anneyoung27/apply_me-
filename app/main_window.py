@@ -376,19 +376,19 @@ class MainWindow(QMainWindow):
 
         # Tombol menu dengan ikon
         btn_dashboard = QPushButton("  Dashboard")
-        btn_dashboard.setIcon(QIcon("assets/icons/home.png"))
+        btn_dashboard.setIcon(QIcon("assets/side_menu/home.png"))
         btn_dashboard.setIconSize(QSize(18, 18))
 
         btn_stats = QPushButton("  Statistics")
-        btn_stats.setIcon(QIcon("assets/icons/statistics.png"))
+        btn_stats.setIcon(QIcon("assets/side_menu/statistics.png"))
         btn_stats.setIconSize(QSize(18, 18))
 
         btn_reminders = QPushButton("  Reminders")
-        btn_reminders.setIcon(QIcon("assets/icons/reminders.png"))
+        btn_reminders.setIcon(QIcon("assets/side_menu/reminders.png"))
         btn_reminders.setIconSize(QSize(18, 18))
 
         btn_contacts = QPushButton("  Contacts")
-        btn_contacts.setIcon(QIcon("assets/icons/contacts.png"))
+        btn_contacts.setIcon(QIcon("assets/side_menu/contacts.png"))
         btn_contacts.setIconSize(QSize(18, 18))
 
         # self.side_menu.addItem(QListWidgetItem("Home"))

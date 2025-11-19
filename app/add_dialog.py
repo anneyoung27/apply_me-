@@ -2,6 +2,8 @@ from PySide6.QtWidgets import (
     QDialog, QLineEdit, QTextEdit, QComboBox, QDateEdit,
     QLabel, QPushButton, QFileDialog, QGridLayout, QHBoxLayout, QVBoxLayout
 )
+
+from PySide6.QtGui import QIcon
 from app.utils import qdate_to_date
 from app.models import Application
 
@@ -13,7 +15,13 @@ class ApplicationDialog(QDialog):
         self.resume_path = None
         self.cover_path = None
 
-        self.setWindowTitle("Edit Application" if application else "Add Application")
+        if application:
+            self.setWindowTitle("Edit Application")
+            self.setWindowIcon(QIcon("assets/others_icon/edit_form.png"))
+        else:
+            self.setWindowTitle("Add Application")
+            self.setWindowIcon(QIcon("assets/others_icon/add_new_form.png"))
+
         self.resize(500, 600)
         self.initUI()
 
