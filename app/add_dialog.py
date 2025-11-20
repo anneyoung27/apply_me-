@@ -11,7 +11,7 @@ class ApplicationDialog(QDialog):
     def __init__(self, session, application=None, parent=None):
         super().__init__(parent)
         self.session = session
-        self.application = application  # None = tambah, object = edit
+        self.application = application
         self.resume_path = None
         self.cover_path = None
 

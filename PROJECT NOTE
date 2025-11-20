@@ -97,7 +97,7 @@ Alur pengguna (user flow) - Dashboard Menu
     Ganti status via dropdown → otomatis create entry di status_history. (DONE - 9-11-2025)
     Attach resume / cover letter → file dicopy ke folder assets/files/<app_id>/ (DONE - 31-10-2025)
     Export data ke CSV dan Excel untuk laporan dari database. (DONE - 9-11-2025)
-    Import data dengan Excel (DONE - 9-11-2025)
+    Import data, buat kaya JIRA (IN PROGRESS)
     Settings : (IN PROGRESS)
         a. Database Settings (Backup Database)
         b. Data Management (Auto Export - semua d ata ke CSV setiap akhir tahun bulan 12)

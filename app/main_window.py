@@ -391,13 +391,6 @@ class MainWindow(QMainWindow):
         btn_contacts.setIcon(QIcon("assets/side_menu/contacts.png"))
         btn_contacts.setIconSize(QSize(18, 18))
 
-        # self.side_menu.addItem(QListWidgetItem("Home"))
-        # self.side_menu.addItem(QListWidgetItem("Statistics"))
-        # self.side_menu.addItem(QListWidgetItem("Reminders"))
-        # self.side_menu.addItem(QListWidgetItem("Contacts"))
-        #
-        # self.side_menu.currentRowChanged.connect(self.switch_page)
-
         # Tambahkan tombol ke layout
         for btn in [btn_dashboard, btn_stats, btn_reminders, btn_contacts]:
             btn.setCheckable(True)

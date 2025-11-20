@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e061ca9-e003-40c8-a0e9-5517b85a9691" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/others_icon/add_new_form.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/others_icon/edit_form.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/add_dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/add_dialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/contacts.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/side_menu/contacts.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/home.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/side_menu/home.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/reminders.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/side_menu/reminders.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/statistics.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/side_menu/statistics.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/apply_me.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/apply_me.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PROJECT NOTE" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT NOTE" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
