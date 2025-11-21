@@ -27,4 +27,3 @@ def open_file(path):
 
 
 
-

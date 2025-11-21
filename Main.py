@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QApplication
-from app.main_window import MainWindow
-from app.database import init_db
+from app.MainWindow import MainWindow
+from app.Database import init_db
 import sys
 
 if __name__ == "__main__":

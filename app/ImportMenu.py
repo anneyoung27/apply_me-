@@ -1,7 +1,7 @@
 import pandas as pd
 from PySide6.QtWidgets import QFileDialog, QMessageBox
-from app.database import SessionLocal
-from app.models import Application
+from app.Database import SessionLocal
+from app.Models import Application
 
 
 class DataImporter:
@@ -18,6 +18,7 @@ class DataImporter:
                 "",
                 "Excel Files (*.xlsx)"
             )
+
             if not file_path:
                 return
 
@@ -34,7 +35,7 @@ class DataImporter:
                 return
 
             # === Validasi kolom wajib ===
-            required_columns = {"company_name", "position", "location", "date_applied", "status"}
+            required_columns = {"company_name", "position", "location", "date_applied", "source", "status", "salary_expectation", "notes"}
             if not required_columns.issubset(df.columns):
                 QMessageBox.critical(
                     self.parent,

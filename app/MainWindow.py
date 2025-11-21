@@ -8,12 +8,11 @@ from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont, QIc
 from PySide6.QtCore import Qt, QSize, QTimer
 
 # App imports
-from app.add_dialog import ApplicationDialog
-from app.database import SessionLocal
-from app.models import Application
-from importlib import import_module
-from app.exporter_menu import DataExporter
-from app.import_menu import DataImporter
+from app.AddDialog import ApplicationDialog
+from app.Database import SessionLocal
+from app.Models import Application
+from app.ImportWindow import ImporterWindow
+from app.ExporterMenu import DataExporter
 from datetime import datetime
 
 
@@ -326,7 +325,7 @@ class MainWindow(QMainWindow):
         toolbar.addAction(about_action)
 
         # === IMPORT ACTION ===
-        import_action.triggered.connect(lambda: DataImporter(self).import_from_excel())
+        import_action.triggered.connect(lambda: ImporterWindow.open_importer_window(self))
 
         # --- Central Layout ---
         central_widget = QWidget()

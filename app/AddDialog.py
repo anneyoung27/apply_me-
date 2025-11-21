@@ -4,8 +4,10 @@ from PySide6.QtWidgets import (
 )
 
 from PySide6.QtGui import QIcon
-from app.utils import qdate_to_date
-from app.models import Application
+
+from app.SalaryLineEdit import SalaryLineEdit
+from app.Util import qdate_to_date
+from app.Models import Application
 
 class ApplicationDialog(QDialog):
     def __init__(self, session, application=None, parent=None):
@@ -46,6 +48,8 @@ class ApplicationDialog(QDialog):
         self.status_input.addItems(["Applied", "Phone Screen", "Interview", "Offer", "Rejected", "Withdrawn"])
 
         self.salary_input = QLineEdit()
+        self.salary_input = SalaryLineEdit()
+
         self.notes_input = QTextEdit()
 
         # === Attach Files ===
@@ -149,7 +153,7 @@ class ApplicationDialog(QDialog):
     def save_data(self):
         from PySide6.QtWidgets import QMessageBox
         from datetime import datetime
-        from app.models import StatusHistory  # pastikan ini sesuai path kamu
+        from app.Models import StatusHistory  # pastikan ini sesuai path kamu
 
         company = self.company_input.text().strip()
         position = self.position_input.text().strip()
