@@ -3,6 +3,20 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database.Database import Base
 
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(String, primary_key=True)
+    name = Column(String)
+    user_name = Column(String)
+    password = Column(String)
+    email = Column(String)
+    phone_number = Column(String)
+    current_working_at = Column(String)
+    current_salary = Column(String)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime)
+
 class Application(Base):
     __tablename__ = "applications"
 

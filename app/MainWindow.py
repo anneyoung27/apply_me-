@@ -19,7 +19,7 @@ from datetime import datetime
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Apply Me — Job Tracker")
+        self.setWindowTitle("Apply Me! — Job Tracker")
         self.resize(1200, 700)
 
         # Nonaktifkan tombol maximize

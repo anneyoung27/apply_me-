@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QComboBox, QHBoxLayout, QPushButton, \
     QMessageBox, QDialog, QProgressDialog
 from datetime import datetime
@@ -13,6 +14,7 @@ class CSVFieldMappingWindow(QDialog):
 
         self.csv_path = csv_path
         self.setWindowTitle("Map fields")
+        self.setWindowIcon(QIcon("assets/others_icon/column-mapping.png"))
         self.setMinimumWidth(600)
 
         layout = QVBoxLayout()
@@ -38,7 +40,7 @@ class CSVFieldMappingWindow(QDialog):
 
         # ---- MAPPING TABLE ----
         self.table = QTableWidget(len(headers), 2)
-        self.table.setHorizontalHeaderLabels(["CSV Field", "apply_me Field"])
+        self.table.setHorizontalHeaderLabels(["CSV Field", "Apply Me! Field"])
 
         db_fields = [
             "company_name", "position", "location", "date_applied",
@@ -65,6 +67,7 @@ class CSVFieldMappingWindow(QDialog):
 
         btn_back.clicked.connect(self.go_back)
         btn_begin.clicked.connect(self.begin_import)
+        btn_begin.setStyleSheet("background-color: #1976d2; color: white;")
 
         btn_layout.addWidget(btn_back)
         btn_layout.addWidget(btn_begin)

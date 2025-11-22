@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QIcon
 
 from app.add_feature.SalaryLineEdit import SalaryLineEdit
-from app.Util import qdate_to_date
+from app.others.Util import qdate_to_date
 from app.database.Models import Application
 
 class ApplicationDialog(QDialog):

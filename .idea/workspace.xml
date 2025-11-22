@@ -5,13 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e061ca9-e003-40c8-a0e9-5517b85a9691" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/import_feature/JSONFieldMappingWindow.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/import_feature/JSONSettingsWindow.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/login_icon/apply-me-job-tracker-icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/login_icon/apply-me-job-tracker-logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/login_icon/hide-password.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/login_icon/unhide-password.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/others_icon/column-mapping.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/others_icon/excel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/others_icon/import-document.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/others_icon/json.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/WelcomeToApplyMe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PROJECT NOTE" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT NOTE" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/MainWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Util.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/others/Util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/add_feature/AddDialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/add_feature/AddDialog.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/database/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/Models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/import_feature/CSVFieldMappingWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/import_feature/CSVFieldMappingWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/import_feature/CSVSettingWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/import_feature/CSVSettingWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/import_feature/ImportFormatWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/import_feature/ImportFormatWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/import_feature/JSONFieldMappingWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/login_feature/LoginPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/import_feature/JSONSettingsWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/import_feature/JSONSettingsWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/apply_me.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/apply_me.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,29 +65,35 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.CSVSettingWindow.executor": "Run",
+    "Python.JSONSettingsWindow.executor": "Run",
+    "Python.LoginPage.executor": "Run",
     "Python.Main.executor": "Run",
+    "Python.Util.executor": "Run",
+    "Python.WelcomeToApplyMe.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_window.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/CodeProject/Python/apply_me!/assets/others_icon",
+    "last_opened_file_path": "D:/CodeProject/Python/apply_me!/assets/login_icon",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\CodeProject\Python\apply_me!\assets\login_icon" />
+      <recent name="D:\CodeProject\Python\apply_me!\assets" />
       <recent name="D:\CodeProject\Python\apply_me!\assets\others_icon" />
       <recent name="D:\CodeProject\Python\apply_me!\assets\head_menu" />
       <recent name="D:\CodeProject\Python\apply_me!\assets\setting" />
-      <recent name="D:\CodeProject\Python\apply_me!\assets\icons" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\CodeProject\Python\apply_me!\assets\login_icon" />
+      <recent name="D:\CodeProject\Python\apply_me!\app\others" />
       <recent name="D:\CodeProject\Python\apply_me!\app\add_feature" />
       <recent name="D:\CodeProject\Python\apply_me!\app\database" />
       <recent name="D:\CodeProject\Python\apply_me!\app\import_feature" />
-      <recent name="D:\CodeProject\Python\apply_me!\app\export_feature" />
     </key>
   </component>
   <component name="SharedIndexes">

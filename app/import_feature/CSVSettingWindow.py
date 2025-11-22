@@ -1,3 +1,4 @@
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QComboBox, QLineEdit, QFormLayout, \
     QFileDialog, QMessageBox
 
@@ -9,6 +10,7 @@ class CSVSettingsWindow(QDialog):
         super().__init__(parent)
 
         self.setWindowTitle("File import")
+        self.setWindowIcon(QIcon("assets/others_icon/import-document.png"))
         self.setMinimumWidth(500)
 
         layout = QVBoxLayout()

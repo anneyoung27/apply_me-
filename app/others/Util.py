@@ -1,9 +1,11 @@
 
 from datetime import date
 import os
+import platform
 import sys
 import subprocess
-from PySide6.QtWidgets import QMessageBox
+
+from PySide6.QtWidgets import QMessageBox, QLabel
 
 
 def qdate_to_date(qdate):
@@ -24,6 +26,3 @@ def open_file(path):
             subprocess.call(["xdg-open", path])
     except Exception as e:
         QMessageBox.critical(None, "Error", f"Failed to open file:\n{str(e)}")
-
-
-
