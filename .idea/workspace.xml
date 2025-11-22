@@ -5,16 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e061ca9-e003-40c8-a0e9-5517b85a9691" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/login_feature/ClickableLabel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/login_feature/LoginWindow.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/login_feature/SignUpWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WelcomeToApplyMe.py" beforeDir="false" afterPath="$PROJECT_DIR$/WelcomeToApplyMe.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/login_feature/LoginPage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/login_icon/apply-me-job-tracker-icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/others_icon/apply-me-job-tracker-icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/login_icon/apply-me-job-tracker-logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/others_icon/apply_me_job_tracker_logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/login_icon/hide-password.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/others_icon/hide-password.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/login_icon/unhide-password.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/others_icon/unhide-password.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PROJECT NOTE" beforeDir="false" afterPath="$PROJECT_DIR$/PROJECT NOTE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/database/Database.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/Database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/database/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/Models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/login_feature/ForgotYourPasswordWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/login_feature/ForgotYourPasswordWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/login_feature/LoginWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/login_feature/LoginWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/login_feature/SignUpWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/login_feature/SignUpWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/apply_me.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/apply_me.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

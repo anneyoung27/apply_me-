@@ -3,14 +3,21 @@ from PySide6.QtWidgets import (
     QHBoxLayout, QCheckBox, QSpacerItem, QSizePolicy
 )
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QCursor
+from PySide6.QtGui import QFont, QIcon
+
+from app.login_feature.ForgotYourPasswordWindow import ForgotYourPasswordWindow
 from app.login_feature.SignUpWindow import SignUpWindow
 from app.login_feature.ClickableLabel import ClickableLabel
+from app.database.Database import SessionLocal
+
 
 class LoginWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.session = SessionLocal()
+
         self.setWindowTitle("Login Page")
+        self.setWindowIcon(QIcon("assets/others_icon/apply_me_job_tracker_logo.png"))
         self.setFixedSize(400, 380)
         self.setup_ui()
 
@@ -55,8 +62,12 @@ class LoginWindow(QWidget):
         self.remember_checkbox = QCheckBox("Remember Me")
         h_layout.addWidget(self.remember_checkbox)
 
-        self.forgot_label = QLabel('<u><i>Forgot your password?</i></u>')
+        # Forgot your password?
+        self.forgot_label = ClickableLabel('<u><i>Forgot your password?</i></u>')
         self.forgot_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.forgot_label.clicked.connect(self.open_forgot_password_window)
+
+        # Tambahkan ke layout horizontal
         h_layout.addWidget(self.forgot_label, alignment=Qt.AlignRight)
         layout.addLayout(h_layout)
 
@@ -85,6 +96,11 @@ class LoginWindow(QWidget):
         self.setLayout(layout)
 
     def open_signup_window(self):
-        self.signup_window = SignUpWindow(login_window=self)
+        self.signup_window = SignUpWindow(login_window=self, session=self.session)
         self.signup_window.show()
+        self.hide()
+
+    def open_forgot_password_window(self):
+        self.forgot_window = ForgotYourPasswordWindow(login_window=self)
+        self.forgot_window.show()
         self.hide()

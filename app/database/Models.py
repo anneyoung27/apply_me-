@@ -6,7 +6,7 @@ from app.database.Database import Base
 class User(Base):
     __tablename__ = "user"
 
-    id = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
     user_name = Column(String)
     password = Column(String)
@@ -45,7 +45,7 @@ class Application(Base):
 class StatusHistory(Base):
     __tablename__ = "status_history"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     application_id = Column(String, ForeignKey("applications.id"))
     old_status = Column(String)
     new_status = Column(String)
@@ -57,7 +57,7 @@ class StatusHistory(Base):
 class Contact(Base):
     __tablename__ = "contacts"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     application_id = Column(String, ForeignKey("applications.id"))
     name = Column(String)
     role = Column(String)
@@ -70,7 +70,7 @@ class Contact(Base):
 class Reminder(Base):
     __tablename__ = "reminders"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     application_id = Column(String, ForeignKey("applications.id"))
     remind_at = Column(DateTime)
     message = Column(Text)
