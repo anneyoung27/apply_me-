@@ -8,11 +8,11 @@ from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QFont, QIc
 from PySide6.QtCore import Qt, QSize, QTimer
 
 # App imports
-from app.AddDialog import ApplicationDialog
-from app.Database import SessionLocal
-from app.Models import Application
-from app.ImportWindow import ImporterWindow
-from app.ExporterMenu import DataExporter
+from app.add_feature.AddDialog import ApplicationDialog
+from app.database.Database import SessionLocal
+from app.database.Models import Application
+from app.import_feature.ImportFormatWindow import ImporterWindow
+from app.export_feature.ExporterMenu import DataExporter
 from datetime import datetime
 
 

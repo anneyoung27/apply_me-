@@ -5,9 +5,9 @@ from PySide6.QtWidgets import (
 
 from PySide6.QtGui import QIcon
 
-from app.SalaryLineEdit import SalaryLineEdit
+from app.add_feature.SalaryLineEdit import SalaryLineEdit
 from app.Util import qdate_to_date
-from app.Models import Application
+from app.database.Models import Application
 
 class ApplicationDialog(QDialog):
     def __init__(self, session, application=None, parent=None):
@@ -153,7 +153,7 @@ class ApplicationDialog(QDialog):
     def save_data(self):
         from PySide6.QtWidgets import QMessageBox
         from datetime import datetime
-        from app.Models import StatusHistory  # pastikan ini sesuai path kamu
+        from app.database.Models import StatusHistory
 
         company = self.company_input.text().strip()
         position = self.position_input.text().strip()

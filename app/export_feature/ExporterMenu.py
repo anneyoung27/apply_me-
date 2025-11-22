@@ -1,7 +1,7 @@
 import pandas as pd
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
-from app.Models import Application
+from app.database.Models import Application
 
 
 class DataExporter:

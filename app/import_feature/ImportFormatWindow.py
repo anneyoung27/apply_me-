@@ -3,7 +3,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
-from app.ImportMenu import DataImporter
+
+from app.import_feature.CSVSettingWindow import CSVSettingsWindow
+from app.import_feature.ImportToExcel import ExcelImporter
 
 class ImporterWindow(QDialog):
     def __init__(self, parent=None):
@@ -68,8 +70,8 @@ class ImporterWindow(QDialog):
     def open_importer_window(self):
         win = ImporterWindow(self)
 
-        win.csv_btn.clicked.connect(lambda: self.start_import_csv(win))
-        win.excel_btn.clicked.connect(lambda: DataImporter(self).import_from_excel())
+        win.csv_btn.clicked.connect(lambda: CSVSettingsWindow(self).exec())
+        win.excel_btn.clicked.connect(lambda: ExcelImporter(self).import_from_excel())
         win.json_btn.clicked.connect(lambda: self.start_import_json(win))
 
         win.exec()

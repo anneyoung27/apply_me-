@@ -5,20 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e061ca9-e003-40c8-a0e9-5517b85a9691" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/ImportWindow.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/SalaryLineEdit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/head_menu/json-file.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/others_icon/import.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/import_feature/CSVFieldMappingWindow.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/import_feature/CSVSettingWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/add_dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/AddDialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/Database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/exporter_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/ExporterMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/import_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/ImportMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/MainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/Util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/AddDialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/add_feature/AddDialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Database.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/Database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ExporterMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/export_feature/ExporterMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ImportMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/import_feature/ImportToExcel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ImportWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/import_feature/ImportFormatWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/MainWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/Models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/SalaryLineEdit.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/add_feature/SalaryLineEdit.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/apply_me.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/apply_me.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +56,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.CSVSettingWindow.executor": "Run",
     "Python.Main.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_window.executor": "Run",
@@ -74,6 +74,12 @@
       <recent name="D:\CodeProject\Python\apply_me!\assets\head_menu" />
       <recent name="D:\CodeProject\Python\apply_me!\assets\setting" />
       <recent name="D:\CodeProject\Python\apply_me!\assets\icons" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\CodeProject\Python\apply_me!\app\add_feature" />
+      <recent name="D:\CodeProject\Python\apply_me!\app\database" />
+      <recent name="D:\CodeProject\Python\apply_me!\app\import_feature" />
+      <recent name="D:\CodeProject\Python\apply_me!\app\export_feature" />
     </key>
   </component>
   <component name="SharedIndexes">

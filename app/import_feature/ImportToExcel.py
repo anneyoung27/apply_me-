@@ -1,10 +1,10 @@
 import pandas as pd
 from PySide6.QtWidgets import QFileDialog, QMessageBox
-from app.Database import SessionLocal
-from app.Models import Application
+from app.database.Database import SessionLocal
+from app.database.Models import Application
 
 
-class DataImporter:
+class ExcelImporter:
     def __init__(self, parent=None):
         self.parent = parent
         self.session = SessionLocal()
