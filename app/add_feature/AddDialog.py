@@ -186,6 +186,8 @@ class ApplicationDialog(QDialog):
                 new_num = 1
 
             app.id = f"{prefix}{new_num:03d}"
+            app.created_at = datetime.now()
+            app.updated_at = None
             self.session.add(app)
             old_status = None  # Tidak ada status lama karena data baru
 
@@ -208,23 +210,39 @@ class ApplicationDialog(QDialog):
         # === Tambahkan ke StatusHistory ===
         # Jika data baru, tambahkan entri awal
         if not self.application:
+            self.session.query(StatusHistory).filter(
+                StatusHistory.application_id == app.id
+            ).update({StatusHistory.active_status: "N"})
+
+            # Data baru → selalu catat status awal
             history = StatusHistory(
                 application_id=app.id,
                 old_status=None,
                 new_status=new_status,
-                timestamp=datetime.now()
+                updated_at=datetime.now(),
+                active_status="Y"
             )
             self.session.add(history)
 
-        # Jika edit dan status berubah, simpan perubahan ke history
-        elif old_status != new_status:
-            history = StatusHistory(
-                application_id=app.id,
-                old_status=old_status,
-                new_status=new_status,
-                timestamp=datetime.now()
-            )
-            self.session.add(history)
+        else:
+            # Data lama → catat history HANYA jika status berubah
+            if old_status != new_status:
+                # Status berubah → buat history baru
+
+                # Matikan semua history lama
+                self.session.query(StatusHistory).filter(
+                    StatusHistory.application_id == app.id
+                ).update({StatusHistory.active_status: "N"})
+
+                # Tambahkan history baru
+                history = StatusHistory(
+                    application_id=app.id,
+                    old_status=old_status,
+                    new_status=new_status,
+                    updated_at=datetime.now(),
+                    active_status="Y"
+                )
+                self.session.add(history)
 
         # === Simpan semua ke DB ===
         self.session.commit()

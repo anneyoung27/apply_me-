@@ -72,6 +72,6 @@ class ImporterWindow(QDialog):
 
         win.csv_btn.clicked.connect(lambda: CSVSettingsWindow(self).exec())
         win.excel_btn.clicked.connect(lambda: ExcelImporter(self).import_from_excel())
-        win.json_btn.clicked.connect(lambda: self.start_import_json(win))
+        # win.json_btn.clicked.connect(lambda: JSONSettingsWindow(self).exec())
 
         win.exec()

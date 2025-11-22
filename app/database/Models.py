@@ -18,7 +18,7 @@ class Application(Base):
     resume_file = Column(String)
     cover_letter_file = Column(String)
     created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    updated_at = Column(DateTime)
 
     status_history = relationship("StatusHistory", back_populates="application", cascade="all, delete-orphan")
     contacts = relationship("Contact", back_populates="application", cascade="all, delete-orphan")
@@ -35,7 +35,8 @@ class StatusHistory(Base):
     application_id = Column(String, ForeignKey("applications.id"))
     old_status = Column(String)
     new_status = Column(String)
-    timestamp = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now)
+    active_status = Column(String, default="Y")
 
     application = relationship("Application", back_populates="status_history")
 

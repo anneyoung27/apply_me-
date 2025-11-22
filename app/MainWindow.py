@@ -218,6 +218,7 @@ class MainWindow(QMainWindow):
 
         dialog = ApplicationDialog(self.session, application=app)
         if dialog.exec_():
+            app.updated_at = datetime.now() # Jika ada update pada row, maka update UPDATED_AT
             self.session.commit()
             self.load_data()
             QMessageBox.information(self, "Updated", "Application updated successfully.")
